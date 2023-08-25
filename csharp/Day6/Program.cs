@@ -1,7 +1,7 @@
 ﻿var input = await File.ReadAllLinesAsync("input.txt");
 var buffer = input.First();
 
-void ProcessMoves(string part, uint consecutive)
+void Process(string part, uint consecutive)
 {
     var queue = new Queue<char>();
     for (int i = 0; i < buffer.Length; i++)
@@ -20,5 +20,5 @@ void ProcessMoves(string part, uint consecutive)
     }
 }
 
-ProcessMoves("One", 4);
-ProcessMoves("Two", 14);
+Process("One", 4);
+Process("Two", 14);

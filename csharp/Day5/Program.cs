@@ -1,4 +1,5 @@
-﻿using Day5;
+﻿using Common;
+using Day5;
 
 // Part One
 var input = await File.ReadAllLinesAsync("input.txt");
@@ -29,7 +30,7 @@ foreach (var stackInfo in stackInfos)
     }
 }
 
-void ProcessMoves(string part, Func<StackQueue<char>, uint, List<char>> func)
+void Process(string part, Func<StackQueue<char>, uint, List<char>> func)
 {
     var localStackQueue = stackQueues.Select(sq => (StackQueue<char>)sq.Clone()).ToList();
     var moves = RegEx.FindMoveNumbers(movesRaw);
@@ -46,5 +47,5 @@ void ProcessMoves(string part, Func<StackQueue<char>, uint, List<char>> func)
     Console.WriteLine($"Part {part}: {answer}");
 }
 
-ProcessMoves("One", (stackQueue, amount) => stackQueue.TakeTop(amount));
-ProcessMoves("Two", (stackQueue, amount) => stackQueue.TakeTopRetainOrder(amount));
+Process("One", (stackQueue, amount) => stackQueue.TakeTop(amount));
+Process("Two", (stackQueue, amount) => stackQueue.TakeTopRetainOrder(amount));

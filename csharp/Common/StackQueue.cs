@@ -1,7 +1,17 @@
-﻿namespace Day5;
+﻿namespace Common;
 
 public class StackQueue<T> : ICloneable
 {
+    public StackQueue() { }
+
+    public StackQueue(IEnumerable<T> objs)
+    {
+        foreach (var obj in objs)
+        {
+            _linkedList.AddLast(obj);
+        }
+    }
+
     private readonly LinkedList<T> _linkedList = new();
 
     public int Count => _linkedList.Count;
@@ -96,6 +106,11 @@ public class StackQueue<T> : ICloneable
         list.Reverse();
 
         return list;
+    }
+
+    public bool Any()
+    {
+        return Count != 0;
     }
 
     public object Clone()
