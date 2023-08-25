@@ -1,9 +1,10 @@
 ﻿// Part One
 var input = await File.ReadAllTextAsync("input.txt");
+var lineEnding = input.Contains("\r\n") ? "\r\n" : "\n"; // Git changed the line endings
 
 var elvesCalories = input
-    .Split("\n\n")
-    .Select(elfSection => elfSection.Split('\n')
+    .Split(lineEnding + lineEnding)
+    .Select(elfSection => elfSection.Split(lineEnding)
         .Where(line => !string.IsNullOrEmpty(line))
         .Select(uint.Parse)
         .Sum(x => x))
