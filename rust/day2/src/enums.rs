@@ -1,4 +1,4 @@
-﻿pub enum Mode {
+﻿pub enum Part {
     PartOne,
     PartTwo,
 }

@@ -1,6 +1,6 @@
 mod enums;
 
-use crate::enums::{Mode, Move};
+use crate::enums::{Part, Move};
 use common::read_lines;
 
 fn main() {
@@ -8,20 +8,20 @@ fn main() {
         .expect("Failed to read lines from file")
         .collect();
 
-    println!("Part One: {}", get_total_score(&lines, Mode::PartOne));
-    println!("Part Two: {}", get_total_score(&lines, Mode::PartTwo));
+    println!("Part One: {}", get_total_score(&lines, Part::PartOne));
+    println!("Part Two: {}", get_total_score(&lines, Part::PartTwo));
 }
 
-fn get_total_score(lines: &[String], mode: Mode) -> i32 {
+fn get_total_score(lines: &[String], part: Part) -> i32 {
     lines
         .iter()
         .filter_map(|line| {
             let chars: Vec<char> = line.chars().collect();
             if chars.len() == 3 {
                 let opponent_move = Move::part_one(chars[0])?;
-                let my_move = match mode {
-                    Mode::PartOne => Move::part_one(chars[2])?,
-                    Mode::PartTwo => Move::part_two(chars[2], &opponent_move)?,
+                let my_move = match part {
+                    Part::PartOne => Move::part_one(chars[2])?,
+                    Part::PartTwo => Move::part_two(chars[2], &opponent_move)?,
                 };
                 Some((opponent_move, my_move))
             } else {

@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use rayon::prelude::*;
 use common::read_lines;
 
 fn main() {
@@ -6,28 +7,27 @@ fn main() {
         .expect("Failed to read lines from file")
         .collect();
 
-    let count = part_one(&lines);
-
-    println!("Part One: {}", count);
+    println!("Part One: {}", part_one(&lines));
 }
 
 // fn part_one(lines: &Vec<String>) -> u32 {
 //     let mut count: u32 = 0;
 //
-//     for line in &lines {
+//     for line in lines {
 //         let split = split_string_in_half(line);
-//         let character = intersecting_character(&split.0, &split.1).expect("No intersecting characters");
-//         let priority = char_to_priority(character).expect("Not a letter");
+//         let char = intersecting_character(&split.0, &split.1).expect("No intersecting characters");
+//         let priority = char_to_priority(char).expect("Not a letter");
 //         count += u32::from(priority);
 //     }
+//
 //     count
 // }
 
 fn part_one(lines: &Vec<String>) -> u32 {
-    lines.iter()
+    lines.par_iter()
         .map(|line| split_string_in_half(line))
         .map(|(first, second)| intersecting_character(&first, &second).expect("No intersecting characters"))
-        .map(|character| char_to_priority(character).expect("Not a letter"))
+        .map(|char| char_to_priority(char).expect("Not a letter"))
         .map(u32::from)
         .sum()
 }
