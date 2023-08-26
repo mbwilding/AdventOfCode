@@ -2,7 +2,7 @@
 using Day5;
 
 // Part One
-var input = await File.ReadAllLinesAsync("input.txt");
+var input = await File.ReadAllLinesAsync("../../../../../!data/day5/real.txt");
 
 var splitIndex = Array.IndexOf(input, string.Empty);
 

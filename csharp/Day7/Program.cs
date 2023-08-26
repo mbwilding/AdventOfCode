@@ -3,7 +3,7 @@ using Day7;
 using Type = Day7.Type;
 
 // Part One
-var input = await File.ReadAllLinesAsync("input.txt");
+var input = await File.ReadAllLinesAsync("../../../../../!data/day7/real.txt");
 var stackQueue = new StackQueue<string>(input);
 
 Data fileSystem = new Data

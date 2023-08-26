@@ -1,4 +1,4 @@
 ﻿**/[Bb]in/
 **/[Oo]bj/
 **/.idea/
-
+rust/target

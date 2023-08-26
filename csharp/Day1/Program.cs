@@ -1,5 +1,5 @@
 ﻿// Part One
-var input = await File.ReadAllTextAsync("input.txt");
+var input = await File.ReadAllTextAsync("../../../../../!data/day1/real.txt");
 var lineEnding = input.Contains("\r\n") ? "\r\n" : "\n"; // Git changed the line endings
 
 var elvesCalories = input

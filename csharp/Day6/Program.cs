@@ -1,4 +1,4 @@
-﻿var input = await File.ReadAllLinesAsync("input.txt");
+﻿var input = await File.ReadAllLinesAsync("../../../../../!data/day6/real.txt");
 var buffer = input.First();
 
 void Process(string part, uint consecutive)

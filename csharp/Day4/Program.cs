@@ -1,5 +1,5 @@
 ﻿// Part One
-var input = await File.ReadAllLinesAsync("input.txt");
+var input = await File.ReadAllLinesAsync("../../../../../!data/day4/real.txt");
 
 var split = input
     .Select(x => x.Split(',')

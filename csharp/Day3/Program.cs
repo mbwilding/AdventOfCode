@@ -1,7 +1,7 @@
 ﻿using Day3;
 
 // Part One
-var input = await File.ReadAllLinesAsync("input.txt");
+var input = await File.ReadAllLinesAsync("../../../../../!data/day3/real.txt");
 
 var rucksacks = input.Select(x => new Rucksack
 {

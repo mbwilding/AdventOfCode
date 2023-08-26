@@ -1,6 +1,6 @@
 ﻿using Day8;
 
-var input = await File.ReadAllLinesAsync("input.txt");
+var input = await File.ReadAllLinesAsync("../../../../../!data/day8/real.txt");
 var forest = new Forest(input);
 
 Console.WriteLine($"Part One: {forest.CountVisibleTrees()}");
