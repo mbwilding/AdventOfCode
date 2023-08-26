@@ -1,19 +1,5 @@
 ﻿namespace Day8;
 
-public class Tree
-{
-    public int X { get; }
-    public int Y { get; }
-    public int Height { get; }
-
-    public Tree(int x, int y, int height)
-    {
-        X = x;
-        Y = y;
-        Height = height;
-    }
-}
-
 public class Forest
 {
     private const char CharOffset = '0';
@@ -24,19 +10,19 @@ public class Forest
     {
         _size = input.Length;
 
-        for (int x = 0; x < _size; x++)
-        for (int y = 0; y < _size; y++)
+        for (var x = 0; x < _size; x++)
+        for (var y = 0; y < _size; y++)
         {
-            int height = input[x][y] - CharOffset;
+            var height = input[x][y] - CharOffset;
             _trees.Add(new Tree(x, y, height));
         }
     }
 
     private (bool Visible, int Count) CheckVisibilityAndDistanceFromDirection(Tree tree, int dx, int dy)
     {
-        int distance = 0;
-        int x = tree.X + dx;
-        int y = tree.Y + dy;
+        var distance = 0;
+        var x = tree.X + dx;
+        var y = tree.Y + dy;
 
         while (x >= 0 && x < _size && y >= 0 && y < _size)
         {
@@ -57,7 +43,7 @@ public class Forest
 
     public int CountVisibleTrees()
     {
-        int visibleCount = 0;
+        var visibleCount = 0;
         foreach (var tree in _trees)
         {
             // Check if the tree is on the edge.
@@ -83,15 +69,15 @@ public class Forest
 
     public int CalculateMaxScenicScore()
     {
-        int maxScenicScore = 0;
+        var maxScenicScore = 0;
 
         foreach (var tree in _trees)
         {
-            int up = CheckVisibilityAndDistanceFromDirection(tree, -1, 0).Count;
-            int down = CheckVisibilityAndDistanceFromDirection(tree, 1, 0).Count;
-            int left = CheckVisibilityAndDistanceFromDirection(tree, 0, -1).Count;
-            int right = CheckVisibilityAndDistanceFromDirection(tree, 0, 1).Count;
-            int scenicScore = up * down * left * right;
+            var up = CheckVisibilityAndDistanceFromDirection(tree, -1, 0).Count;
+            var down = CheckVisibilityAndDistanceFromDirection(tree, 1, 0).Count;
+            var left = CheckVisibilityAndDistanceFromDirection(tree, 0, -1).Count;
+            var right = CheckVisibilityAndDistanceFromDirection(tree, 0, 1).Count;
+            var scenicScore = up * down * left * right;
             maxScenicScore = Math.Max(maxScenicScore, scenicScore);
         }
 
