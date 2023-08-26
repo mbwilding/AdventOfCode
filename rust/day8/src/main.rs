@@ -11,10 +11,11 @@ fn main() -> eframe::Result<()> {
 
 struct App {
     grid: Vec<Vec<u8>>,
+    cell_size: egui::Vec2,
 }
 
 impl App {
-    pub fn new(_: &eframe::CreationContext<'_>) -> Self {
+    pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
         Default::default()
     }
 }
@@ -30,6 +31,7 @@ impl Default for App {
                         .collect::<Vec<u8>>()
                 })
                 .collect(),
+            cell_size: egui::vec2(16.0, 16.0),
         }
     }
 }
@@ -37,42 +39,54 @@ impl Default for App {
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            draw_grid(ui, &self.grid);
+            let grid = &self.grid;
+            let cell_size = &self.cell_size;
+
+            let rows = grid.len();
+            if rows == 0 { return; }
+            let cols = grid[0].len();
+
+            let mouse_inside_window = ctx.input(|i| i.pointer.has_pointer());
+            let mouse_pos = ctx.input(|i| i.pointer.hover_pos().unwrap_or_default());
+
+            let mut closest_cell = None;
+
+            // This is the threshold beyond which we won't highlight any cells
+            let highlight_threshold = cell_size.x.max(cell_size.y); // Using the largest dimension of the cell
+
+            if mouse_inside_window {
+                let mut min_distance = f32::MAX;
+
+                for row in 0..rows {
+                    for col in 0..cols {
+                        let rect_center = egui::pos2((col as f32 + 0.5) * cell_size.x, (row as f32 + 0.5) * cell_size.y);
+                        let distance = mouse_pos.distance(rect_center);
+                        if distance < min_distance && distance < highlight_threshold {
+                            min_distance = distance;
+                            closest_cell = Some((row, col));
+                        }
+                    }
+                }
+            }
+
+            for row in 0..rows {
+                for col in 0..cols {
+                    let rect_min = egui::pos2(col as f32 * cell_size.x, row as f32 * cell_size.y);
+                    let rect_center = rect_min + (*cell_size * 0.5);
+                    let text_color = if closest_cell == Some((row, col)) {
+                        egui::Color32::GREEN
+                    } else {
+                        egui::Color32::WHITE
+                    };
+                    ui.painter().text(
+                        rect_center,
+                        egui::Align2::CENTER_CENTER,
+                        grid[row][col],
+                        egui::FontId::default(),
+                        text_color
+                    );
+                }
+            }
         });
-    }
-}
-
-fn draw_grid(ui: &mut egui::Ui, grid: &Vec<Vec<u8>>) {
-    // Define cell size
-    let cell_size = egui::vec2(16.0, 16.0);
-
-    let rows = grid.len();
-    if rows == 0 { return; }  // Return early if grid is empty
-
-    let cols = grid[0].len();
-
-    for row in 0..rows {
-        for col in 0..cols {
-            let rect_min = egui::pos2(col as f32 * cell_size.x, row as f32 * cell_size.y);
-            let rect_max = rect_min + cell_size;
-            let rect = egui::Rect::from_min_max(rect_min, rect_max);
-
-            // Paint cell background (optional)
-            ui.painter().rect_filled(rect, 0.0, egui::Color32::WHITE);
-
-            // Paint cell border
-            ui.painter().rect_stroke(rect, 0.0, (1.0, egui::Color32::BLACK));
-
-            // Display the cell's number from the grid
-            let number = grid[row][col];
-            let number_position = rect.center();
-            ui.painter().text(
-                number_position,
-                egui::Align2::CENTER_CENTER,
-                number.to_string(),
-                egui::FontId::default(),
-                egui::Color32::BLACK
-            );
-        }
     }
 }
