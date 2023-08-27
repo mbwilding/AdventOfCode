@@ -3,7 +3,7 @@ use common::read_lines;
 use eframe::egui;
 use eframe::egui::Vec2;
 
-pub(crate) struct App {
+pub struct App {
     forest: Forest,
     cell_size: Vec2,
     visible_trees: usize,

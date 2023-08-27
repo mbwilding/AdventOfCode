@@ -1,7 +1,7 @@
 ﻿#[derive(PartialEq)]
 pub struct Pos {
-    pub(crate) row: usize,
-    pub(crate) col: usize,
+    pub row: usize,
+    pub col: usize,
 }
 
 impl Default for Pos {
@@ -11,9 +11,9 @@ impl Default for Pos {
 }
 
 pub struct Tree {
-    pub(crate) height: u8,
-    pub(crate) visible: bool,
-    pub(crate) trees_that_make_me_visible: Vec<Pos>,
+    pub height: u8,
+    pub visible: bool,
+    pub trees_that_make_me_visible: Vec<Pos>,
 }
 
 impl Default for Tree {
@@ -27,11 +27,11 @@ impl Default for Tree {
 }
 
 pub struct Forest {
-    pub(crate) trees: Vec<Vec<Tree>>,
+    pub trees: Vec<Vec<Tree>>,
 }
 
 impl Forest {
-    pub(crate) fn calculate_visible_trees(&mut self) -> usize {
+    pub fn calculate_visible_trees(&mut self) -> usize {
         let mut visible_count = 0;
 
         for row in 0..self.trees.len() {
