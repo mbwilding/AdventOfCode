@@ -16,7 +16,7 @@ fn main() -> eframe::Result<()> {
 struct App {
     forest: Forest,
     cell_size: Vec2,
-    visible_trees_count: usize,
+    visible_trees: usize,
 }
 
 impl App {
@@ -41,12 +41,12 @@ impl Default for App {
                 .collect::<Vec<Vec<Tree>>>(),
         };
 
-        let visible_trees_count = forest.calculate_visible_trees();
+        let visible_trees = forest.calculate_visible_trees();
 
         Self {
             forest,
             cell_size: egui::vec2(16.0, 16.0),
-            visible_trees_count,
+            visible_trees,
         }
     }
 }
@@ -85,7 +85,7 @@ impl eframe::App for App {
                 egui::Window::new("Information")
                     .anchor(egui::Align2::CENTER_CENTER, Vec2::ZERO)
                     .show(ctx, |ui| {
-                        ui.label(format!("Total Visible Trees: {}", self.visible_trees_count));
+                        ui.label(format!("Total Visible Trees: {}", self.visible_trees));
                     });
             }
 
@@ -141,15 +141,15 @@ impl Forest {
     fn calculate_visible_trees(&mut self) -> usize {
         let mut visible_count = 0;
 
-        for i in 0..self.trees.len() {
-            for j in 0..self.trees[0].len() {
-                let (is_visible, trees_making_visible) = self.check_visibility(i, j);
+        for row in 0..self.trees.len() {
+            for col in 0..self.trees[0].len() {
+                let (is_visible, trees_making_visible) = self.check_visibility(row, col);
                 if is_visible {
-                    self.trees[i][j].visible = true;
-                    self.trees[i][j].trees_that_make_me_visible = trees_making_visible;
+                    self.trees[row][col].visible = true;
+                    self.trees[row][col].trees_that_make_me_visible = trees_making_visible;
                     visible_count += 1;
                 } else {
-                    self.trees[i][j].visible = false;
+                    self.trees[row][col].visible = false;
                 }
             }
         }
@@ -157,23 +157,23 @@ impl Forest {
         visible_count
     }
 
-    fn check_visibility(&self, i: usize, j: usize) -> (bool, Vec<(usize, usize)>) {
+    fn check_visibility(&self, row: usize, col: usize) -> (bool, Vec<(usize, usize)>) {
         let mut trees_making_visible = Vec::new();
-        let current_tree_height = self.trees[i][j].height;
+        let current_tree_height = self.trees[row][col].height;
         let mut top_visible = false;
         let mut bottom_visible = false;
         let mut left_visible = false;
         let mut right_visible = false;
 
         // If the tree is on the boundary, it is visible
-        if i == 0 || i == self.trees.len() - 1 || j == 0 || j == self.trees[0].len() - 1 {
+        if row == 0 || row == self.trees.len() - 1 || col == 0 || col == self.trees[0].len() - 1 {
             return (true, trees_making_visible);
         }
 
         // Check from top
-        for row in (0..i).rev() {
-            if self.trees[row][j].height < current_tree_height {
-                trees_making_visible.push((row, j));
+        for row in (0..row).rev() {
+            if self.trees[row][col].height < current_tree_height {
+                trees_making_visible.push((row, col));
             } else {
                 break;
             }
@@ -183,9 +183,9 @@ impl Forest {
         }
 
         // Check from bottom
-        for row in i + 1..self.trees.len() {
-            if self.trees[row][j].height < current_tree_height {
-                trees_making_visible.push((row, j));
+        for row in row + 1..self.trees.len() {
+            if self.trees[row][col].height < current_tree_height {
+                trees_making_visible.push((row, col));
             } else {
                 break;
             }
@@ -195,9 +195,9 @@ impl Forest {
         }
 
         // Check from left
-        for col in (0..j).rev() {
-            if self.trees[i][col].height < current_tree_height {
-                trees_making_visible.push((i, col));
+        for col in (0..col).rev() {
+            if self.trees[row][col].height < current_tree_height {
+                trees_making_visible.push((row, col));
             } else {
                 break;
             }
@@ -207,9 +207,9 @@ impl Forest {
         }
 
         // Check from right
-        for col in j + 1..self.trees[0].len() {
-            if self.trees[i][col].height < current_tree_height {
-                trees_making_visible.push((i, col));
+        for col in col + 1..self.trees[0].len() {
+            if self.trees[row][col].height < current_tree_height {
+                trees_making_visible.push((row, col));
             } else {
                 break;
             }
@@ -221,7 +221,7 @@ impl Forest {
         if top_visible || bottom_visible || left_visible || right_visible {
             (true, trees_making_visible)
         } else {
-            (false, vec![]) // Return false and an empty vector, tree is not visible
+            (false, vec![])
         }
     }
 }
