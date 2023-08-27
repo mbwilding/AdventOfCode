@@ -55,10 +55,6 @@ impl Default for App {
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            ui.heading(format!("Visible trees: {}", self.visible_trees_count));
-        });
-
         egui::CentralPanel::default().show(ctx, |ui| {
             let forest = &self.forest.trees;
             let cell_size = &self.cell_size;
@@ -87,6 +83,12 @@ impl eframe::App for App {
                         }
                     }
                 }
+            } else {
+                egui::Window::new("Information")
+                    // .anchor(egui::Align2::RIGHT_BOTTOM, Vec2::ZERO)
+                    .show(ctx, |ui| {
+                        ui.label(format!("Total Visible Trees: {}", self.visible_trees_count));
+                    });
             }
 
             for row in 0..rows {
