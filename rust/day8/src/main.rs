@@ -95,7 +95,7 @@ impl eframe::App for App {
                     let rect_center = rect_min + (*cell_size * 0.5);
                     let text_color = if closest_cell == Some((row, col)) {
                         egui::Color32::WHITE
-                    } else if closest_cell.is_some() && forest[closest_cell.unwrap().0][closest_cell.unwrap().1].trees_that_make_me_visible.iter().any(|&(r, c)| (r, c) == (row, col)) {
+                    } else if closest_cell.is_some() && forest[closest_cell.unwrap().0][closest_cell.unwrap().1].trees_that_make_me_visible.iter().any(|pos| pos == &Pos { row, col }) {
                         egui::Color32::YELLOW
                     } else {
                         if forest[row][col].visible {
@@ -117,10 +117,25 @@ impl eframe::App for App {
     }
 }
 
+#[derive(PartialEq)]
+struct Pos {
+    row: usize,
+    col: usize,
+}
+
+impl Default for Pos {
+    fn default() -> Self {
+        Self {
+            row: 0,
+            col: 0,
+        }
+    }
+}
+
 struct Tree {
     height: u8,
     visible: bool,
-    trees_that_make_me_visible: Vec<(usize, usize)>,
+    trees_that_make_me_visible: Vec<Pos>,
 }
 
 impl Default for Tree {
@@ -128,7 +143,7 @@ impl Default for Tree {
         Self {
             height: 0,
             visible: false,
-            trees_that_make_me_visible: Vec::new(),
+            trees_that_make_me_visible: vec![],
         }
     }
 }
@@ -157,7 +172,7 @@ impl Forest {
         visible_count
     }
 
-    fn check_visibility(&self, row: usize, col: usize) -> (bool, Vec<(usize, usize)>) {
+    fn check_visibility(&self, row: usize, col: usize) -> (bool, Vec<Pos>) {
         let mut trees_making_visible = Vec::new();
         let current_tree_height = self.trees[row][col].height;
         let mut top_visible = false;
@@ -173,7 +188,7 @@ impl Forest {
         // Check from top
         for row in (0..row).rev() {
             if self.trees[row][col].height < current_tree_height {
-                trees_making_visible.push((row, col));
+                trees_making_visible.push(Pos { row, col });
             } else {
                 break;
             }
@@ -185,7 +200,7 @@ impl Forest {
         // Check from bottom
         for row in row + 1..self.trees.len() {
             if self.trees[row][col].height < current_tree_height {
-                trees_making_visible.push((row, col));
+                trees_making_visible.push(Pos { row, col });
             } else {
                 break;
             }
@@ -197,7 +212,7 @@ impl Forest {
         // Check from left
         for col in (0..col).rev() {
             if self.trees[row][col].height < current_tree_height {
-                trees_making_visible.push((row, col));
+                trees_making_visible.push(Pos { row, col });
             } else {
                 break;
             }
@@ -209,7 +224,7 @@ impl Forest {
         // Check from right
         for col in col + 1..self.trees[0].len() {
             if self.trees[row][col].height < current_tree_height {
-                trees_making_visible.push((row, col));
+                trees_making_visible.push(Pos { row, col });
             } else {
                 break;
             }
