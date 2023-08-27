@@ -69,31 +69,32 @@ impl eframe::App for App {
             let mouse_inside_window = ctx.input(|i| i.pointer.has_pointer());
             let mouse_pos = ctx.input(|i| i.pointer.hover_pos().unwrap_or_default());
 
+            let highlight_threshold = cell_size.x.max(cell_size.y);
+
             let mut closest_cell = None;
-
-            let highlight_threshold = cell_size.x.max(cell_size.y); // Using the largest dimension of the cell
-
             if mouse_inside_window {
-                let mut min_distance = f32::MAX;
-
-                for row in 0..rows {
-                    for col in 0..cols {
+                closest_cell = (0..rows)
+                    .flat_map(|row| (0..cols).map(move |col| Pos { row, col }))
+                    .map(|pos| {
                         let rect_center = egui::pos2(
-                            (col as f32 + 0.5) * cell_size.x,
-                            (row as f32 + 0.5) * cell_size.y,
+                            (pos.col as f32 + 0.5) * cell_size.x,
+                            (pos.row as f32 + 0.5) * cell_size.y,
                         );
                         let distance = mouse_pos.distance(rect_center);
-                        if distance < min_distance && distance < highlight_threshold {
-                            min_distance = distance;
-                            closest_cell = Some((row, col));
-                        }
-                    }
-                }
+                        (pos, distance)
+                    })
+                    .filter(|&(_, distance)| distance < highlight_threshold)
+                    .min_by(|&(_, distance1), &(_, distance2)| {
+                        distance1
+                            .partial_cmp(&distance2)
+                            .unwrap_or(std::cmp::Ordering::Equal)
+                    })
+                    .map(|(pos, _)| pos);
             } else {
                 egui::Window::new("Information")
                     .anchor(egui::Align2::CENTER_CENTER, Vec2::ZERO)
                     .show(ctx, |ui| {
-                        ui.label(format!("Total Visible Trees: {}", self.visible_trees));
+                        ui.label(format!("Visible Trees: {}", self.visible_trees));
                     });
             }
 
@@ -101,22 +102,23 @@ impl eframe::App for App {
                 for col in 0..cols {
                     let rect_min = egui::pos2(col as f32 * cell_size.x, row as f32 * cell_size.y);
                     let rect_center = rect_min + (*cell_size * 0.5);
-                    let text_color = if closest_cell == Some((row, col)) {
-                        egui::Color32::WHITE
-                    } else if closest_cell.is_some()
-                        && forest[closest_cell.unwrap().0][closest_cell.unwrap().1]
-                            .trees_that_make_me_visible
-                            .iter()
-                            .any(|pos| pos == &Pos { row, col })
-                    {
-                        egui::Color32::YELLOW
-                    } else {
-                        if forest[row][col].visible {
+
+                    let text_color =
+                        if mouse_inside_window && closest_cell == Some(Pos { row, col }) {
+                            egui::Color32::WHITE
+                        } else if closest_cell.as_ref().map_or(false, |c| {
+                            forest[c.row][c.col]
+                                .trees_that_make_me_visible
+                                .iter()
+                                .any(|pos| pos == &Pos { row, col })
+                        }) {
+                            egui::Color32::YELLOW
+                        } else if forest[row][col].visible {
                             egui::Color32::GREEN
                         } else {
                             egui::Color32::RED
-                        }
-                    };
+                        };
+
                     ui.painter().text(
                         rect_center,
                         egui::Align2::CENTER_CENTER,
