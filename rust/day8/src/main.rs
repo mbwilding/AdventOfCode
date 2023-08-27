@@ -133,69 +133,11 @@ impl Forest {
 
         for i in 0..self.trees.len() {
             for j in 0..self.trees[0].len() {
-                let current_tree_height = self.trees[i][j].borrow().height;
-                let mut trees_making_visible = Vec::new();
-
-                let visible_from_top = if i == 0 {
-                    true
-                } else {
-                    let visible = self.trees[0..i].iter().all(|row| {
-                        if row[j].borrow().height < current_tree_height {
-                            trees_making_visible.push(Rc::clone(&row[j]));
-                            true
-                        } else {
-                            false
-                        }
-                    });
-                    visible
-                };
-
-                let visible_from_bottom = if i == self.trees.len() - 1 {
-                    true
-                } else {
-                    let visible = self.trees[i+1..].iter().all(|row| {
-                        if row[j].borrow().height < current_tree_height {
-                            trees_making_visible.push(Rc::clone(&row[j]));
-                            true
-                        } else {
-                            false
-                        }
-                    });
-                    visible
-                };
-
-                let visible_from_left = if j == 0 {
-                    true
-                } else {
-                    let visible = self.trees[i][0..j].iter().all(|tree| {
-                        if tree.borrow().height < current_tree_height {
-                            trees_making_visible.push(Rc::clone(&tree));
-                            true
-                        } else {
-                            false
-                        }
-                    });
-                    visible
-                };
-
-                let visible_from_right = if j == self.trees[0].len() - 1 {
-                    true
-                } else {
-                    let visible = self.trees[i][j+1..].iter().all(|tree| {
-                        if tree.borrow().height < current_tree_height {
-                            trees_making_visible.push(Rc::clone(&tree));
-                            true
-                        } else {
-                            false
-                        }
-                    });
-                    visible
-                };
-
-                if visible_from_top || visible_from_bottom || visible_from_left || visible_from_right {
-                    visible_count += 1;
+                let trees_making_visible = self.check_visibility(i, j);
+                if !trees_making_visible.is_empty() || i == 0 || i == self.trees.len() - 1 || j == 0 || j == self.trees[0].len() - 1 {
                     self.trees[i][j].borrow_mut().set_visibility(true);
                     self.trees[i][j].borrow_mut().trees_that_make_me_visible = trees_making_visible;
+                    visible_count += 1;
                 } else {
                     self.trees[i][j].borrow_mut().set_visibility(false);
                 }
@@ -203,5 +145,53 @@ impl Forest {
         }
 
         visible_count
+    }
+
+    fn check_visibility(&self, i: usize, j: usize) -> Vec<Rc<RefCell<Tree>>> {
+        let mut trees_making_visible = Vec::new();
+        let current_tree_height = self.trees[i][j].borrow().height;
+
+        // If the tree is on the boundary, it is visible
+        if i == 0 || i == self.trees.len() - 1 || j == 0 || j == self.trees[0].len() - 1 {
+            return trees_making_visible;  // Return an empty vector, but the tree is considered visible
+        }
+
+        // Check from top
+        for row in (0..i).rev() {
+            if self.trees[row][j].borrow().height < current_tree_height {
+                trees_making_visible.push(Rc::clone(&self.trees[row][j]));
+            } else {
+                break;
+            }
+        }
+
+        // Check from bottom
+        for row in i+1..self.trees.len() {
+            if self.trees[row][j].borrow().height < current_tree_height {
+                trees_making_visible.push(Rc::clone(&self.trees[row][j]));
+            } else {
+                break;
+            }
+        }
+
+        // Check from left
+        for col in (0..j).rev() {
+            if self.trees[i][col].borrow().height < current_tree_height {
+                trees_making_visible.push(Rc::clone(&self.trees[i][col]));
+            } else {
+                break;
+            }
+        }
+
+        // Check from right
+        for col in j+1..self.trees[0].len() {
+            if self.trees[i][col].borrow().height < current_tree_height {
+                trees_making_visible.push(Rc::clone(&self.trees[i][col]));
+            } else {
+                break;
+            }
+        }
+
+        trees_making_visible
     }
 }
