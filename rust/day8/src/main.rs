@@ -1,5 +1,3 @@
-use std::cell::RefCell;
-use std::rc::Rc;
 use eframe::egui;
 use eframe::egui::Vec2;
 use common::read_lines;
@@ -33,14 +31,14 @@ impl Default for App {
             .expect("Failed to read lines from file")
             .map(|line| {
                 line.chars()
-                    .map(|ch| Rc::new(RefCell::new(Tree {
+                    .map(|ch| Tree {
                         height: ch.to_digit(10).unwrap() as u8,
                         visible: None,
                         trees_that_make_me_visible: Vec::new(),
-                    })))
-                    .collect::<Vec<Rc<RefCell<Tree>>>>()
+                    })
+                    .collect::<Vec<Tree>>()
             })
-            .collect::<Vec<Vec<Rc<RefCell<Tree>>>>>();
+            .collect::<Vec<Vec<Tree>>>();
 
         let mut forest = Forest { trees };
         let visible_trees_count = forest.count_visible_trees();
@@ -85,7 +83,7 @@ impl eframe::App for App {
                 }
             } else {
                 egui::Window::new("Information")
-                    // .anchor(egui::Align2::RIGHT_BOTTOM, Vec2::ZERO)
+                    .anchor(egui::Align2::CENTER_CENTER, Vec2::ZERO)
                     .show(ctx, |ui| {
                         ui.label(format!("Total Visible Trees: {}", self.visible_trees_count));
                     });
@@ -96,11 +94,11 @@ impl eframe::App for App {
                     let rect_min = egui::pos2(col as f32 * cell_size.x, row as f32 * cell_size.y);
                     let rect_center = rect_min + (*cell_size * 0.5);
                     let text_color = if closest_cell == Some((row, col)) {
-                        egui::Color32::BLUE
-                    } else if closest_cell.is_some() && forest[closest_cell.unwrap().0][closest_cell.unwrap().1].borrow().trees_that_make_me_visible.iter().any(|tree| Rc::ptr_eq(tree, &forest[row][col])) {
+                        egui::Color32::WHITE
+                    } else if closest_cell.is_some() && forest[closest_cell.unwrap().0][closest_cell.unwrap().1].trees_that_make_me_visible.iter().any(|&(r, c)| (r, c) == (row, col)) {
                         egui::Color32::YELLOW
                     } else {
-                        if forest[row][col].borrow().is_visible() {
+                        if forest[row][col].is_visible() {
                             egui::Color32::GREEN
                         } else {
                             egui::Color32::RED
@@ -109,7 +107,7 @@ impl eframe::App for App {
                     ui.painter().text(
                         rect_center,
                         egui::Align2::CENTER_CENTER,
-                        forest[row][col].borrow().height.to_string(),
+                        forest[row][col].height,
                         egui::FontId::default(),
                         text_color
                     );
@@ -122,7 +120,7 @@ impl eframe::App for App {
 struct Tree {
     height: u8,
     visible: Option<bool>,
-    trees_that_make_me_visible: Vec<Rc<RefCell<Tree>>>,
+    trees_that_make_me_visible: Vec<(usize, usize)>,
 }
 
 impl Tree {
@@ -136,7 +134,7 @@ impl Tree {
 }
 
 struct Forest {
-    trees: Vec<Vec<Rc<RefCell<Tree>>>>,
+    trees: Vec<Vec<Tree>>,
 }
 
 impl Forest {
@@ -147,11 +145,11 @@ impl Forest {
             for j in 0..self.trees[0].len() {
                 let (is_visible, trees_making_visible) = self.check_visibility(i, j);
                 if is_visible {
-                    self.trees[i][j].borrow_mut().set_visibility(true);
-                    self.trees[i][j].borrow_mut().trees_that_make_me_visible = trees_making_visible;
+                    self.trees[i][j].set_visibility(true);
+                    self.trees[i][j].trees_that_make_me_visible = trees_making_visible;
                     visible_count += 1;
                 } else {
-                    self.trees[i][j].borrow_mut().set_visibility(false);
+                    self.trees[i][j].set_visibility(false);
                 }
             }
         }
@@ -159,9 +157,9 @@ impl Forest {
         visible_count
     }
 
-    fn check_visibility(&self, i: usize, j: usize) -> (bool, Vec<Rc<RefCell<Tree>>>) {
+    fn check_visibility(&self, i: usize, j: usize) -> (bool, Vec<(usize, usize)>) {
         let mut trees_making_visible = Vec::new();
-        let current_tree_height = self.trees[i][j].borrow().height;
+        let current_tree_height = self.trees[i][j].height;
         let mut top_visible = false;
         let mut bottom_visible = false;
         let mut left_visible = false;
@@ -174,8 +172,8 @@ impl Forest {
 
         // Check from top
         for row in (0..i).rev() {
-            if self.trees[row][j].borrow().height < current_tree_height {
-                trees_making_visible.push(Rc::clone(&self.trees[row][j]));
+            if self.trees[row][j].height < current_tree_height {
+                trees_making_visible.push((row, j));
             } else {
                 break;
             }
@@ -186,8 +184,8 @@ impl Forest {
 
         // Check from bottom
         for row in i+1..self.trees.len() {
-            if self.trees[row][j].borrow().height < current_tree_height {
-                trees_making_visible.push(Rc::clone(&self.trees[row][j]));
+            if self.trees[row][j].height < current_tree_height {
+                trees_making_visible.push((row, j));
             } else {
                 break;
             }
@@ -198,8 +196,8 @@ impl Forest {
 
         // Check from left
         for col in (0..j).rev() {
-            if self.trees[i][col].borrow().height < current_tree_height {
-                trees_making_visible.push(Rc::clone(&self.trees[i][col]));
+            if self.trees[i][col].height < current_tree_height {
+                trees_making_visible.push((i, col));
             } else {
                 break;
             }
@@ -210,8 +208,8 @@ impl Forest {
 
         // Check from right
         for col in j+1..self.trees[0].len() {
-            if self.trees[i][col].borrow().height < current_tree_height {
-                trees_making_visible.push(Rc::clone(&self.trees[i][col]));
+            if self.trees[i][col].height < current_tree_height {
+                trees_making_visible.push((i, col));
             } else {
                 break;
             }
