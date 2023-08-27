@@ -27,20 +27,21 @@ impl App {
 
 impl Default for App {
     fn default() -> Self {
-        let trees = read_lines("../!data/day8/real.txt")
-            .expect("Failed to read lines from file")
-            .map(|line| {
-                line.chars()
-                    .map(|ch| Tree {
-                        height: ch.to_digit(10).unwrap() as u8,
-                        ..Default::default()
-                    })
-                    .collect::<Vec<Tree>>()
-            })
-            .collect::<Vec<Vec<Tree>>>();
+        let mut forest = Forest {
+            trees: read_lines("../!data/day8/real.txt")
+                .expect("Failed to read lines from file")
+                .map(|line| {
+                    line.chars()
+                        .map(|ch| Tree {
+                            height: ch.to_digit(10).unwrap() as u8,
+                            ..Default::default()
+                        })
+                        .collect::<Vec<Tree>>()
+                })
+                .collect::<Vec<Vec<Tree>>>(),
+        };
 
-        let mut forest = Forest { trees };
-        let visible_trees_count = forest.count_visible_trees();
+        let visible_trees_count = forest.calculate_visible_trees();
 
         Self {
             forest,
@@ -97,7 +98,7 @@ impl eframe::App for App {
                     } else if closest_cell.is_some() && forest[closest_cell.unwrap().0][closest_cell.unwrap().1].trees_that_make_me_visible.iter().any(|&(r, c)| (r, c) == (row, col)) {
                         egui::Color32::YELLOW
                     } else {
-                        if forest[row][col].is_visible() {
+                        if forest[row][col].visible {
                             egui::Color32::GREEN
                         } else {
                             egui::Color32::RED
@@ -118,25 +119,15 @@ impl eframe::App for App {
 
 struct Tree {
     height: u8,
-    visible: Option<bool>,
+    visible: bool,
     trees_that_make_me_visible: Vec<(usize, usize)>,
-}
-
-impl Tree {
-    fn is_visible(&self) -> bool {
-        self.visible.unwrap_or(false)
-    }
-
-    fn set_visibility(&mut self, value: bool) {
-        self.visible = Some(value);
-    }
 }
 
 impl Default for Tree {
     fn default() -> Self {
         Self {
             height: 0,
-            visible: None,
+            visible: false,
             trees_that_make_me_visible: Vec::new(),
         }
     }
@@ -147,18 +138,18 @@ struct Forest {
 }
 
 impl Forest {
-    fn count_visible_trees(&mut self) -> usize {
+    fn calculate_visible_trees(&mut self) -> usize {
         let mut visible_count = 0;
 
         for i in 0..self.trees.len() {
             for j in 0..self.trees[0].len() {
                 let (is_visible, trees_making_visible) = self.check_visibility(i, j);
                 if is_visible {
-                    self.trees[i][j].set_visibility(true);
+                    self.trees[i][j].visible = true;
                     self.trees[i][j].trees_that_make_me_visible = trees_making_visible;
                     visible_count += 1;
                 } else {
-                    self.trees[i][j].set_visibility(false);
+                    self.trees[i][j].visible = false;
                 }
             }
         }
@@ -192,7 +183,7 @@ impl Forest {
         }
 
         // Check from bottom
-        for row in i+1..self.trees.len() {
+        for row in i + 1..self.trees.len() {
             if self.trees[row][j].height < current_tree_height {
                 trees_making_visible.push((row, j));
             } else {
@@ -216,7 +207,7 @@ impl Forest {
         }
 
         // Check from right
-        for col in j+1..self.trees[0].len() {
+        for col in j + 1..self.trees[0].len() {
             if self.trees[i][col].height < current_tree_height {
                 trees_making_visible.push((i, col));
             } else {
