@@ -1,12 +1,15 @@
+use common::read_lines;
 use eframe::egui;
 use eframe::egui::Vec2;
-use common::read_lines;
 
 fn main() -> eframe::Result<()> {
     eframe::run_native(
         "Day 8: Treetop Tree House",
         eframe::NativeOptions {
-            initial_window_size: Some(Vec2 { x: 1584.0, y: 1584.0 }),
+            initial_window_size: Some(Vec2 {
+                x: 1584.0,
+                y: 1584.0,
+            }),
             ..Default::default()
         },
         Box::new(|cc| Box::new(App::new(cc))),
@@ -58,7 +61,9 @@ impl eframe::App for App {
             let cell_size = &self.cell_size;
 
             let rows = forest.len();
-            if rows == 0 { return; }
+            if rows == 0 {
+                return;
+            }
             let cols = forest[0].len();
 
             let mouse_inside_window = ctx.input(|i| i.pointer.has_pointer());
@@ -73,7 +78,10 @@ impl eframe::App for App {
 
                 for row in 0..rows {
                     for col in 0..cols {
-                        let rect_center = egui::pos2((col as f32 + 0.5) * cell_size.x, (row as f32 + 0.5) * cell_size.y);
+                        let rect_center = egui::pos2(
+                            (col as f32 + 0.5) * cell_size.x,
+                            (row as f32 + 0.5) * cell_size.y,
+                        );
                         let distance = mouse_pos.distance(rect_center);
                         if distance < min_distance && distance < highlight_threshold {
                             min_distance = distance;
@@ -95,7 +103,12 @@ impl eframe::App for App {
                     let rect_center = rect_min + (*cell_size * 0.5);
                     let text_color = if closest_cell == Some((row, col)) {
                         egui::Color32::WHITE
-                    } else if closest_cell.is_some() && forest[closest_cell.unwrap().0][closest_cell.unwrap().1].trees_that_make_me_visible.iter().any(|pos| pos == &Pos { row, col }) {
+                    } else if closest_cell.is_some()
+                        && forest[closest_cell.unwrap().0][closest_cell.unwrap().1]
+                            .trees_that_make_me_visible
+                            .iter()
+                            .any(|pos| pos == &Pos { row, col })
+                    {
                         egui::Color32::YELLOW
                     } else {
                         if forest[row][col].visible {
@@ -109,7 +122,7 @@ impl eframe::App for App {
                         egui::Align2::CENTER_CENTER,
                         forest[row][col].height,
                         egui::FontId::default(),
-                        text_color
+                        text_color,
                     );
                 }
             }
@@ -125,10 +138,7 @@ struct Pos {
 
 impl Default for Pos {
     fn default() -> Self {
-        Self {
-            row: 0,
-            col: 0,
-        }
+        Self { row: 0, col: 0 }
     }
 }
 
