@@ -33,8 +33,7 @@ impl Default for App {
                 line.chars()
                     .map(|ch| Tree {
                         height: ch.to_digit(10).unwrap() as u8,
-                        visible: None,
-                        trees_that_make_me_visible: Vec::new(),
+                        ..Default::default()
                     })
                     .collect::<Vec<Tree>>()
             })
@@ -130,6 +129,16 @@ impl Tree {
 
     fn set_visibility(&mut self, value: bool) {
         self.visible = Some(value);
+    }
+}
+
+impl Default for Tree {
+    fn default() -> Self {
+        Self {
+            height: 0,
+            visible: None,
+            trees_that_make_me_visible: Vec::new(),
+        }
     }
 }
 
