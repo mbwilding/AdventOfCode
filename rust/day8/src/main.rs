@@ -1,19 +1,24 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use eframe::egui;
+use eframe::egui::Vec2;
 use common::read_lines;
 
 fn main() -> eframe::Result<()> {
     eframe::run_native(
         "Day 8: Treetop Tree House",
-        Default::default(),
+        eframe::NativeOptions {
+            initial_window_size: Some(Vec2 { x: 1584.0, y: 1584.0 }),
+            ..Default::default()
+        },
         Box::new(|cc| Box::new(App::new(cc))),
     )
 }
 
 struct App {
     forest: Forest,
-    cell_size: egui::Vec2,
+    cell_size: Vec2,
+    visible_trees_count: usize,
 }
 
 impl App {
@@ -38,17 +43,22 @@ impl Default for App {
             .collect::<Vec<Vec<Rc<RefCell<Tree>>>>>();
 
         let mut forest = Forest { trees };
-        forest.count_visible_trees();
+        let visible_trees_count = forest.count_visible_trees();
 
         Self {
             forest,
             cell_size: egui::vec2(16.0, 16.0),
+            visible_trees_count,
         }
     }
 }
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
+            ui.heading(format!("Visible trees: {}", self.visible_trees_count));
+        });
+
         egui::CentralPanel::default().show(ctx, |ui| {
             let forest = &self.forest.trees;
             let cell_size = &self.cell_size;
@@ -133,8 +143,8 @@ impl Forest {
 
         for i in 0..self.trees.len() {
             for j in 0..self.trees[0].len() {
-                let trees_making_visible = self.check_visibility(i, j);
-                if !trees_making_visible.is_empty() || i == 0 || i == self.trees.len() - 1 || j == 0 || j == self.trees[0].len() - 1 {
+                let (is_visible, trees_making_visible) = self.check_visibility(i, j);
+                if is_visible {
                     self.trees[i][j].borrow_mut().set_visibility(true);
                     self.trees[i][j].borrow_mut().trees_that_make_me_visible = trees_making_visible;
                     visible_count += 1;
@@ -147,13 +157,17 @@ impl Forest {
         visible_count
     }
 
-    fn check_visibility(&self, i: usize, j: usize) -> Vec<Rc<RefCell<Tree>>> {
+    fn check_visibility(&self, i: usize, j: usize) -> (bool, Vec<Rc<RefCell<Tree>>>) {
         let mut trees_making_visible = Vec::new();
         let current_tree_height = self.trees[i][j].borrow().height;
+        let mut top_visible = false;
+        let mut bottom_visible = false;
+        let mut left_visible = false;
+        let mut right_visible = false;
 
         // If the tree is on the boundary, it is visible
         if i == 0 || i == self.trees.len() - 1 || j == 0 || j == self.trees[0].len() - 1 {
-            return trees_making_visible;  // Return an empty vector, but the tree is considered visible
+            return (true, trees_making_visible);
         }
 
         // Check from top
@@ -162,6 +176,9 @@ impl Forest {
                 trees_making_visible.push(Rc::clone(&self.trees[row][j]));
             } else {
                 break;
+            }
+            if row == 0 {
+                top_visible = true;
             }
         }
 
@@ -172,6 +189,9 @@ impl Forest {
             } else {
                 break;
             }
+            if row == self.trees.len() - 1 {
+                bottom_visible = true;
+            }
         }
 
         // Check from left
@@ -180,6 +200,9 @@ impl Forest {
                 trees_making_visible.push(Rc::clone(&self.trees[i][col]));
             } else {
                 break;
+            }
+            if col == 0 {
+                left_visible = true;
             }
         }
 
@@ -190,8 +213,15 @@ impl Forest {
             } else {
                 break;
             }
+            if col == self.trees[0].len() - 1 {
+                right_visible = true;
+            }
         }
 
-        trees_making_visible
+        if top_visible || bottom_visible || left_visible || right_visible {
+            (true, trees_making_visible)
+        } else {
+            (false, vec![]) // Return false and an empty vector, tree is not visible
+        }
     }
 }
