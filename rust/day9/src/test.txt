@@ -1,0 +1,44 @@
+use common::read_lines;
+
+enum Direction {
+    Left,
+    Right,
+    Up,
+    Down,
+}
+
+impl Direction {
+    fn from_char(c: char) -> Direction {
+        match c {
+            'L' => Direction::Left,
+            'R' => Direction::Right,
+            'U' => Direction::Up,
+            'D' => Direction::Down,
+            _ => panic!("Unknown direction character: {}", c),
+        }
+    }
+}
+
+fn main() {
+    let moves: Vec<_> = read_lines("../!data/day9/mock.txt")
+        .expect("Failed to read lines from file")
+        .map(|line| {
+            let direction = line.chars().nth(0).unwrap();
+            let positions: u8 = line[2..]
+                .trim()
+                .parse()
+                .expect("Failed to parse positions as integer");
+
+            (Direction::from_char(direction), positions)
+        })
+        .collect();
+
+    for (dir, pos) in &moves {
+        match dir {
+            Direction::Left => println!("Left {}", pos),
+            Direction::Right => println!("Right {}", pos),
+            Direction::Up => println!("Up {}", pos),
+            Direction::Down => println!("Down {}", pos),
+        }
+    }
+}

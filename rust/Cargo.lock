@@ -697,6 +697,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "day9"
+version = "0.1.0"
+dependencies = [
+ "common",
+ "eframe",
+]
+
+[[package]]
 name = "derivative"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

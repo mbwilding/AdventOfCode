@@ -7,6 +7,7 @@ pub struct App {
     forest: Forest,
     cell_size: Vec2,
     visible_trees: usize,
+    max_scenic_score: u32,
 }
 
 impl App {
@@ -32,27 +33,38 @@ impl Default for App {
         };
 
         let visible_trees = forest.calculate_visible_trees();
+        let max_scenic_score = forest.calculate_max_scenic_score();
 
         Self {
             forest,
             cell_size: egui::vec2(16.0, 16.0),
             visible_trees,
+            max_scenic_score,
         }
     }
 }
 
 impl eframe::App for App {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+        let forest = &self.forest.trees;
+        let cell_size = &self.cell_size;
+
+        let rows = forest.len();
+        if rows == 0 {
+            return;
+        }
+        let cols = forest[0].len();
+
+        // Do one start
+        let cell = self.cell_size;
+        let window_size = Vec2 {
+            x: cols as f32 * cell.x,
+            y: rows as f32 * cell.y,
+        };
+        frame.set_window_size(window_size);
+        // Do once end
+
         egui::CentralPanel::default().show(ctx, |ui| {
-            let forest = &self.forest.trees;
-            let cell_size = &self.cell_size;
-
-            let rows = forest.len();
-            if rows == 0 {
-                return;
-            }
-            let cols = forest[0].len();
-
             let mouse_inside_window = ctx.input(|i| i.pointer.has_pointer());
             let mouse_pos = ctx.input(|i| i.pointer.hover_pos().unwrap_or_default());
 
@@ -82,6 +94,7 @@ impl eframe::App for App {
                     .anchor(egui::Align2::CENTER_CENTER, Vec2::ZERO)
                     .show(ctx, |ui| {
                         ui.label(format!("Visible Trees: {}", self.visible_trees));
+                        ui.label(format!("Max Scenic Score: {}", self.max_scenic_score));
                     });
             }
 
@@ -95,7 +108,7 @@ impl eframe::App for App {
                             egui::Color32::WHITE
                         } else if closest_cell.as_ref().map_or(false, |c| {
                             forest[c.row][c.col]
-                                .trees_that_make_me_visible
+                                .trees_in_range
                                 .iter()
                                 .any(|pos| pos == &Pos { row, col })
                         }) {
