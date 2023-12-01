@@ -20,8 +20,9 @@ where
 }
 
 pub fn test<F, T>(day: i32, file: &str, part: F, expected: T) -> Result<()>
-    where
-        F: Fn(&[String]) -> T, T: PartialEq + Debug
+where
+    F: Fn(&[String]) -> T,
+    T: PartialEq + Debug,
 {
     let path = format!("../../!data/day{}/{}.txt", day, file);
     let lines = read_file_lines(&path)?;
