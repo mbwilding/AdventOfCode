@@ -1,8 +1,0 @@
-[package]
-name = "day9"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-common = { path = "../common" }
-eframe = "0.22"
