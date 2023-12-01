@@ -22,7 +22,7 @@ var totalOverlap = groups.Select(group =>
 
 var totalOverlapped = totalOverlap.Count(x => x);
 
-Console.WriteLine($"Part One: {totalOverlapped}");
+Console.WriteLine($"Part 1: {totalOverlapped}");
 
 // Part Two
 var overlap = groups.Select(group =>
@@ -34,4 +34,4 @@ var overlap = groups.Select(group =>
 
 var overlapped = overlap.Count(x => x);
 
-Console.WriteLine($"Part Two: {overlapped}");
+Console.WriteLine($"Part 2: {overlapped}");

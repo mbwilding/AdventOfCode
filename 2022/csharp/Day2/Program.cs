@@ -16,7 +16,7 @@ var sum = turnsPartOne
     .Select(x => x.Scored)
     .Sum();
 
-Console.WriteLine($"Part One: {sum}");
+Console.WriteLine($"Part 1: {sum}");
 
 // Part Two
 var turnsPartTwo = split
@@ -27,4 +27,4 @@ sum = turnsPartTwo
     .Select(x => x.Scored)
     .Sum();
 
-Console.WriteLine($"Part Two: {sum}");
+Console.WriteLine($"Part 2: {sum}");

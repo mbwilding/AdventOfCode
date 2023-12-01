@@ -19,7 +19,7 @@ impl Default for App {
     fn default() -> Self {
         let moves: Vec<_> = read_lines("../!data/day9/mock.txt")
             .expect("Failed to read lines from file")
-            .map(Move::new())
+            .map(|line| Move::new(line))
             .collect();
 
         Self {

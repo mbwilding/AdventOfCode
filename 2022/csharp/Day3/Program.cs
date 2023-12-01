@@ -21,7 +21,7 @@ foreach (var rucksack in rucksacks)
 
 var sum = score.Sum();
 
-Console.WriteLine($"Part One: {sum}");
+Console.WriteLine($"Part 1: {sum}");
 
 // Part Two
 var grouped = input
@@ -41,4 +41,4 @@ var priorities = grouped
 
 sum = priorities.Sum(Logic.Score);
 
-Console.WriteLine($"Part Two: {sum}");
+Console.WriteLine($"Part 2: {sum}");

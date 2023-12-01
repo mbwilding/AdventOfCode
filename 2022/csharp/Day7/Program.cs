@@ -73,7 +73,7 @@ var partOne = fileSystem
     .FindDirectoriesBySizeRange(maxSize: 100_000)
     .Sum(x => x.DirectorySize);
 
-Console.WriteLine($"Part One: {partOne}");
+Console.WriteLine($"Part 1: {partOne}");
 
 // Part Two
 const int totalSpace = 70_000_000;
@@ -87,4 +87,4 @@ var partTwo = fileSystem
     .FindDirectoriesBySizeRange(minSize: minRequired)
     .MinBy(x => x.DirectorySize)?
     .DirectorySize;
-Console.WriteLine($"Part Two: {partTwo}");
+Console.WriteLine($"Part 2: {partTwo}");

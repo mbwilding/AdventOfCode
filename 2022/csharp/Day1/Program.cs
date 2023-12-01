@@ -12,7 +12,7 @@ var elvesCalories = input
 
 var max = elvesCalories.Max();
 
-Console.WriteLine($"Part One: {max}");
+Console.WriteLine($"Part 1: {max}");
 
 // Part Two
 var top3Calories = elvesCalories
@@ -20,4 +20,4 @@ var top3Calories = elvesCalories
     .Take(3)
     .Sum();
 
-Console.WriteLine($"Part Two: {top3Calories}");
+Console.WriteLine($"Part 2: {top3Calories}");

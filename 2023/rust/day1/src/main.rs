@@ -1,14 +1,17 @@
+use anyhow::Result;
 use std::collections::HashMap;
 use common_2023::read_lines;
 
-fn main() {
-    let lines = read_lines("2023/!data/day1/real.txt").expect("Failed to read lines from file");
+fn main() -> Result<()> {
+    let lines = read_lines("2023/!data/day1/real.txt")?;
 
     let part_1 = process_lines_part_1(&lines);
-    println!("Part One: {}", part_1);
+    println!("Part 1: {}", part_1);
 
     let part_2 = process_lines_part_2(&lines);
-    println!("Part Two: {}", part_2);
+    println!("Part 2: {}", part_2);
+
+    Ok(())
 }
 
 fn process_lines_part_1(lines: &Vec<String>) -> u32 {
@@ -41,10 +44,10 @@ fn process_lines_part_1(lines: &Vec<String>) -> u32 {
 }
 
 fn process_lines_part_2(lines: &Vec<String>) -> i32 {
+    let number_map = word_to_number_lut();
     let mut sum = 0;
 
     for line in lines {
-        let number_map = word_to_number_lut();
         let mut first_digit = 0;
         let mut last_digit = 0;
         let mut current_word = String::new();
@@ -94,4 +97,27 @@ fn word_to_number_lut() -> HashMap<&'static str, i32> {
     map.insert("nine", 9);
 
     map
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn part_1_test() -> Result<()> {
+        let lines = read_lines("../../!data/day1/mock1.txt")?;
+        let result = process_lines_part_1(&lines);
+        assert_eq!(result, 142);
+
+        Ok(())
+    }
+
+    #[test]
+    fn part_2_test() -> Result<()> {
+        let lines = read_lines("../../!data/day1/mock2.txt")?;
+        let result = process_lines_part_2(&lines);
+        assert_eq!(result, 281);
+
+        Ok(())
+    }
 }

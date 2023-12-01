@@ -1,6 +1,6 @@
 mod enums;
 
-use crate::enums::{Move, Part};
+use crate::enums::{Part, Move};
 use common_2022::read_lines;
 
 fn main() {
@@ -8,8 +8,8 @@ fn main() {
         .expect("Failed to read lines from file")
         .collect();
 
-    println!("Part One: {}", get_total_score(&lines, Part::PartOne));
-    println!("Part Two: {}", get_total_score(&lines, Part::PartTwo));
+    println!("Part 1: {}", get_total_score(&lines, Part::PartOne));
+    println!("Part 2: {}", get_total_score(&lines, Part::PartTwo));
 }
 
 fn get_total_score(lines: &[String], part: Part) -> i32 {
