@@ -7,5 +7,6 @@ members = [
     "2022/rust/day3",
     "2022/rust/day8",
     "2022/rust/day9",
+    "2023/rust/common",
     "2023/rust/day1",
 ]
