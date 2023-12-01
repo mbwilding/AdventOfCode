@@ -27,6 +27,7 @@ where
     let path = format!("../../!data/day{}/{}.txt", day, file);
     let lines = read_file_lines(&path)?;
     let actual = part(&lines);
+
     assert_eq!(expected, actual);
 
     Ok(())
@@ -35,7 +36,7 @@ where
 fn read_file_lines(path: &str) -> io::Result<Vec<String>> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
-
     let lines = reader.lines().collect::<Result<Vec<_>, io::Error>>()?;
+
     Ok(lines)
 }
