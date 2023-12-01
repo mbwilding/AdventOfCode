@@ -4,7 +4,10 @@ pub fn process_lines_part_1(lines: &[String]) -> u32 {
     lines
         .iter()
         .map(|line| {
-            let digits: Vec<u32> = line.chars().filter_map(|c| c.to_digit(10)).collect();
+            let digits = line
+                .chars()
+                .filter_map(|c| c.to_digit(10))
+                .collect::<Vec<_>>();
 
             let first = digits.first().unwrap();
             let last = digits.last().unwrap();
@@ -20,8 +23,8 @@ pub fn process_lines_part_2(lines: &[String]) -> i32 {
     lines
         .iter()
         .map(|line| {
-            let mut first_digit = 0;
-            let mut last_digit = 0;
+            let mut first = 0;
+            let mut last = 0;
             let mut current_word = String::new();
 
             for c in line.chars() {
@@ -29,26 +32,24 @@ pub fn process_lines_part_2(lines: &[String]) -> i32 {
                     current_word.push(c);
                     for i in 0..current_word.len() {
                         if let Some(&number) = number_map.get(&current_word[i..]) {
-                            if first_digit == 0 {
-                                first_digit = number;
+                            if first == 0 {
+                                first = number;
                             }
-                            last_digit = number;
+                            last = number;
                             break;
                         }
                     }
                 } else if c.is_digit(10) {
                     let digit = c.to_digit(10).unwrap() as i32;
-                    if first_digit == 0 {
-                        first_digit = digit;
+                    if first == 0 {
+                        first = digit;
                     }
-                    last_digit = digit;
-                    current_word.clear();
-                } else {
+                    last = digit;
                     current_word.clear();
                 }
             }
 
-            first_digit * 10 + last_digit
+            first * 10 + last
         })
         .sum()
 }
