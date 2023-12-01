@@ -17,14 +17,14 @@ pub fn process_lines_part_1(lines: &[String]) -> u32 {
         .sum()
 }
 
-pub fn process_lines_part_2(lines: &[String]) -> i32 {
+pub fn process_lines_part_2(lines: &[String]) -> u32 {
     let number_map = word_to_number_lut();
 
     lines
         .iter()
         .map(|line| {
-            let mut first = 0;
-            let mut last = 0;
+            let mut first = 0u32;
+            let mut last = 0u32;
             let mut current_word = String::new();
 
             for c in line.chars() {
@@ -40,7 +40,7 @@ pub fn process_lines_part_2(lines: &[String]) -> i32 {
                         }
                     }
                 } else if c.is_digit(10) {
-                    let digit = c.to_digit(10).unwrap() as i32;
+                    let digit = c.to_digit(10).unwrap();
                     if first == 0 {
                         first = digit;
                     }
@@ -54,7 +54,7 @@ pub fn process_lines_part_2(lines: &[String]) -> i32 {
         .sum()
 }
 
-fn word_to_number_lut() -> HashMap<&'static str, i32> {
+fn word_to_number_lut() -> HashMap<&'static str, u32> {
     let mut map = HashMap::new();
     map.insert("one", 1);
     map.insert("two", 2);
