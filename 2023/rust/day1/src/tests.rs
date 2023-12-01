@@ -6,36 +6,28 @@ mod tests {
 
     #[test]
     fn mock_part_1_test() -> Result<()> {
-        let lines = read_lines("../../!data/day1/mock1.txt")?;
-        let result = part_1(&lines);
-        assert_eq!(142, result);
+        test(1, "mock1", part_1, 142)?;
 
         Ok(())
     }
 
     #[test]
     fn mock_part_2_test() -> Result<()> {
-        let lines = read_lines("../../!data/day1/mock2.txt")?;
-        let result = part_2(&lines);
-        assert_eq!(281, result);
+        test(1, "mock2", part_2, 281)?;
 
         Ok(())
     }
 
     #[test]
     fn real_part_1_test() -> Result<()> {
-        let lines = read_lines("../../!data/day1/real.txt")?;
-        let result = part_1(&lines);
-        assert_eq!(54573, result);
+        test(1, "real", part_1, 54573)?;
 
         Ok(())
     }
 
     #[test]
     fn real_part_2_test() -> Result<()> {
-        let lines = read_lines("../../!data/day1/real.txt")?;
-        let result = part_2(&lines);
-        assert_eq!(54591, result);
+        test(1, "real", part_2, 54591)?;
 
         Ok(())
     }
