@@ -4,22 +4,12 @@ pub struct Pos {
     pub col: usize,
 }
 
+#[derive(Default)]
 pub struct Tree {
     pub height: u8,
     pub scenic_score: u32,
     pub visible: bool,
     pub trees_in_range: Vec<Pos>,
-}
-
-impl Default for Tree {
-    fn default() -> Self {
-        Self {
-            height: 0,
-            scenic_score: 0,
-            visible: false,
-            trees_in_range: vec![],
-        }
-    }
 }
 
 pub struct Forest {

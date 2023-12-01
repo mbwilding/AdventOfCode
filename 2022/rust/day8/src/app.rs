@@ -19,7 +19,7 @@ impl App {
 impl Default for App {
     fn default() -> Self {
         let mut forest = Forest {
-            trees: read_lines("../!data/day8/real.txt")
+            trees: read_lines("2022/!data/day8/real.txt")
                 .expect("Failed to read lines from file")
                 .map(|line| {
                     line.chars()

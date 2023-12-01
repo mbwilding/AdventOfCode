@@ -1,7 +1,7 @@
 use common_2022::read_lines;
 
 fn main() {
-    let lines = read_lines("../!data/day1/real.txt").expect("Failed to read lines from file");
+    let lines = read_lines("2022/!data/day1/real.txt").expect("Failed to read lines from file");
 
     let sorted_calories = process_lines(lines);
     println!("Part 1: {}", sorted_calories[0]);

@@ -1,8 +1,9 @@
+use rayon::prelude::*;
 use std::collections::HashMap;
 
 pub fn process_lines_part_1(lines: &[String]) -> u32 {
     lines
-        .iter()
+        .par_iter()
         .map(|line| {
             let digits = line
                 .chars()
@@ -21,7 +22,7 @@ pub fn process_lines_part_2(lines: &[String]) -> u32 {
     let number_map = word_to_number_lut();
 
     lines
-        .iter()
+        .par_iter()
         .map(|line| {
             let mut first = 0u32;
             let mut last = 0u32;
@@ -39,7 +40,7 @@ pub fn process_lines_part_2(lines: &[String]) -> u32 {
                             break;
                         }
                     }
-                } else if c.is_digit(10) {
+                } else if c.is_ascii_digit() {
                     let digit = c.to_digit(10).unwrap();
                     if first == 0 {
                         first = digit;

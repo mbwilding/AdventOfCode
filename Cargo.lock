@@ -739,6 +739,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "common_2023",
+ "rayon",
 ]
 
 [[package]]
@@ -758,14 +759,6 @@ dependencies = [
 
 [[package]]
 name = "day_8_2022"
-version = "0.1.0"
-dependencies = [
- "common_2022",
- "eframe",
-]
-
-[[package]]
-name = "day_9_2022"
 version = "0.1.0"
 dependencies = [
  "common_2022",

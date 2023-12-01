@@ -4,7 +4,7 @@ use crate::enums::{Move, Part};
 use common_2022::read_lines;
 
 fn main() {
-    let lines: Vec<String> = read_lines("../!data/day2/real.txt")
+    let lines: Vec<String> = read_lines("2022/!data/day2/real.txt")
         .expect("Failed to read lines from file")
         .collect();
 

@@ -7,3 +7,4 @@ edition = "2021"
 common_2023 = { path = "../common" }
 
 anyhow = "1.0"
+rayon = "1.8"
