@@ -1,6 +1,6 @@
 mod enums;
 
-use crate::enums::{Part, Move};
+use crate::enums::{Move, Part};
 use common_2022::read_lines;
 
 fn main() {

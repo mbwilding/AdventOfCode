@@ -1,6 +1,6 @@
-use std::collections::HashSet;
-use rayon::prelude::*;
 use common_2022::read_lines;
+use rayon::prelude::*;
+use std::collections::HashSet;
 
 fn main() {
     let lines: Vec<String> = read_lines("../!data/day3/real.txt")
@@ -11,9 +11,12 @@ fn main() {
 }
 
 fn part_one(lines: &Vec<String>) -> u32 {
-    lines.par_iter()
+    lines
+        .par_iter()
         .map(|line| split_string_in_half(line))
-        .map(|(first, second)| intersecting_character(&first, &second).expect("No intersecting characters"))
+        .map(|(first, second)| {
+            intersecting_character(&first, &second).expect("No intersecting characters")
+        })
         .map(|char| char_to_priority(char).expect("Not a letter"))
         .map(u32::from)
         .sum()
@@ -40,6 +43,6 @@ fn char_to_priority(char: char) -> Option<u8> {
     match char {
         'a'..='z' => Some((char as u8 - 'a' as u8) + 1),
         'A'..='Z' => Some((char as u8 - 'A' as u8) + 27),
-        _ => None
+        _ => None,
     }
 }

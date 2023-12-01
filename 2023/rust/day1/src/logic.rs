@@ -1,0 +1,69 @@
+use std::collections::HashMap;
+
+pub fn process_lines_part_1(lines: &[String]) -> u32 {
+    lines
+        .iter()
+        .map(|line| {
+            let digits: Vec<u32> = line.chars().filter_map(|c| c.to_digit(10)).collect();
+
+            let first = digits.first().unwrap();
+            let last = digits.last().unwrap();
+
+            first * 10 + last
+        })
+        .sum()
+}
+
+pub fn process_lines_part_2(lines: &[String]) -> i32 {
+    let number_map = word_to_number_lut();
+
+    lines
+        .iter()
+        .map(|line| {
+            let mut first_digit = 0;
+            let mut last_digit = 0;
+            let mut current_word = String::new();
+
+            for c in line.chars() {
+                if c.is_alphabetic() {
+                    current_word.push(c);
+                    for i in 0..current_word.len() {
+                        if let Some(&number) = number_map.get(&current_word[i..]) {
+                            if first_digit == 0 {
+                                first_digit = number;
+                            }
+                            last_digit = number;
+                            break;
+                        }
+                    }
+                } else if c.is_digit(10) {
+                    let digit = c.to_digit(10).unwrap() as i32;
+                    if first_digit == 0 {
+                        first_digit = digit;
+                    }
+                    last_digit = digit;
+                    current_word.clear();
+                } else {
+                    current_word.clear();
+                }
+            }
+
+            first_digit * 10 + last_digit
+        })
+        .sum()
+}
+
+fn word_to_number_lut() -> HashMap<&'static str, i32> {
+    let mut map = HashMap::new();
+    map.insert("one", 1);
+    map.insert("two", 2);
+    map.insert("three", 3);
+    map.insert("four", 4);
+    map.insert("five", 5);
+    map.insert("six", 6);
+    map.insert("seven", 7);
+    map.insert("eight", 8);
+    map.insert("nine", 9);
+
+    map
+}
