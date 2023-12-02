@@ -6,7 +6,7 @@ public static class Helpers
 {
     public static async Task Run<T1, T2>(int day, string file, Func<string[], T1> part1, Func<string[], T2> part2)
     {
-        var path = $"../../../../../!data/day{day}/{file}.txt";
+        var path = $"../../../../../../!data/day{day}/{file}.txt";
         var lines = await File.ReadAllLinesAsync(path).ConfigureAwait(false);
 
         Console.WriteLine($"Part 1: {part1.Invoke(lines)}");
