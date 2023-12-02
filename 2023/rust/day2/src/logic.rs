@@ -8,14 +8,14 @@ pub fn part_1(lines: &[String]) -> u32 {
     lines
         .par_iter()
         .filter_map(|line| {
-            let parts: Vec<&str> = line.split(": ").collect();
+            let parts = line.split(": ").collect::<Vec<&str>>();
             let game_id: u32 = parts[0].split_whitespace().last().unwrap().parse().unwrap();
 
             parts[1]
                 .split("; ")
                 .all(|set| {
                     set.split(", ").all(|c| {
-                        let vec: Vec<&str> = c.split_whitespace().collect();
+                        let vec = c.split_whitespace().collect::<Vec<&str>>();
                         let count: u32 = vec[0].parse().unwrap();
                         let color = vec[1];
                         count <= *max_cubes.get(color).unwrap()
@@ -34,17 +34,17 @@ pub fn part_2(lines: &[String]) -> u32 {
                 .nth(1)
                 .unwrap()
                 .split("; ")
-                .fold(HashMap::new(), |mut cubes, set| {
+                .fold(HashMap::new(), |mut min_cubes, set| {
                     set.split(", ").for_each(|cube| {
-                        let parts: Vec<&str> = cube.split_whitespace().collect();
+                        let parts = cube.split_whitespace().collect::<Vec<&str>>();
                         let count = parts[0].parse::<u32>().unwrap();
                         let color = parts[1];
-                        cubes
+                        min_cubes
                             .entry(color)
                             .and_modify(|e| *e = u32::max(*e, count))
                             .or_insert(count);
                     });
-                    cubes
+                    min_cubes
                 })
                 .values()
                 .product::<u32>()
