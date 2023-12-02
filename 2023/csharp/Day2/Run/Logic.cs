@@ -10,7 +10,7 @@ public static class Logic
                 var parts = line.Split(": ");
                 var gameId = int.Parse(parts[0].Split().Last());
 
-                bool isValid = parts[1]
+                var isValid = parts[1]
                     .Split("; ")
                     .All(set => set.Split(", ")
                         .All(c =>
