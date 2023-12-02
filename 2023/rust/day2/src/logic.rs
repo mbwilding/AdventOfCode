@@ -1,8 +1,9 @@
+use crate::data::*;
 use rayon::prelude::*;
 use std::collections::HashMap;
 
 pub fn part_1(lines: &[String]) -> u32 {
-    let max_cubes = HashMap::from([("red", 12), ("green", 13), ("blue", 14)]);
+    let max_cubes = max_cubes_lut();
 
     lines
         .par_iter()
