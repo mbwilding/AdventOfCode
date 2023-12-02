@@ -2,9 +2,8 @@
 
 public static class Logic
 {
-    public static int Part1(IEnumerable<string> lines)
-    {
-        return lines
+    public static int Part1(IEnumerable<string> lines) =>
+        lines
             .AsParallel()
             .Select(line =>
             {
@@ -25,7 +24,6 @@ public static class Logic
                 return isValid ? gameId : 0;
             })
             .Sum();
-    }
 
     public static int Part2(IEnumerable<string> lines) =>
         lines
