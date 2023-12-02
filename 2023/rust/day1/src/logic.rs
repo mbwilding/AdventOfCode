@@ -10,7 +10,7 @@ pub fn part_1(lines: &[String]) -> u32 {
                 .filter_map(|c| c.to_digit(10))
                 .collect::<Vec<_>>();
 
-            let first = digits.first().unwrap();
+            let first = digits[0];
             let last = digits.last().unwrap();
 
             first * 10 + last
@@ -19,7 +19,17 @@ pub fn part_1(lines: &[String]) -> u32 {
 }
 
 pub fn part_2(lines: &[String]) -> u32 {
-    let number_lut = word_to_number_lut();
+    let number_lut = HashMap::from([
+        ("one", 1),
+        ("two", 2),
+        ("three", 3),
+        ("four", 4),
+        ("five", 5),
+        ("six", 6),
+        ("seven", 7),
+        ("eight", 8),
+        ("nine", 9),
+    ]);
 
     lines
         .par_iter()
@@ -53,19 +63,4 @@ pub fn part_2(lines: &[String]) -> u32 {
             first * 10 + last
         })
         .sum()
-}
-
-fn word_to_number_lut() -> HashMap<&'static str, u32> {
-    let mut map = HashMap::new();
-    map.insert("one", 1);
-    map.insert("two", 2);
-    map.insert("three", 3);
-    map.insert("four", 4);
-    map.insert("five", 5);
-    map.insert("six", 6);
-    map.insert("seven", 7);
-    map.insert("eight", 8);
-    map.insert("nine", 9);
-
-    map
 }
