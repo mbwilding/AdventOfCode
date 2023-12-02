@@ -29,22 +29,22 @@ pub fn part_1(lines: &[String]) -> u32 {
 pub fn part_2(lines: &[String]) -> u32 {
     lines
         .par_iter()
-        .map(|game| {
-            game.split(": ")
+        .map(|line| {
+            line.split(": ")
                 .nth(1)
                 .unwrap()
                 .split("; ")
-                .fold(HashMap::new(), |mut min_cubes, set| {
+                .fold(HashMap::new(), |mut cubes, set| {
                     set.split(", ").for_each(|cube| {
                         let parts: Vec<&str> = cube.split_whitespace().collect();
                         let count = parts[0].parse::<u32>().unwrap();
                         let color = parts[1];
-                        min_cubes
+                        cubes
                             .entry(color)
                             .and_modify(|e| *e = u32::max(*e, count))
                             .or_insert(count);
                     });
-                    min_cubes
+                    cubes
                 })
                 .values()
                 .product::<u32>()
