@@ -28,9 +28,9 @@ public static class Logic
     public static int Part2(IEnumerable<string> lines) =>
         lines
             .AsParallel()
-            .Select(game =>
+            .Select(line =>
             {
-                var cubes = game.Split(": ")[1]
+                var cubes = line.Split(": ")[1]
                     .Split("; ")
                     .SelectMany(set => set.Split(", "))
                     .Select(cube =>
