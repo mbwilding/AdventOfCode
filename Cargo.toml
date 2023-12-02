@@ -9,4 +9,5 @@ members = [
     "2023/rust/common",
     "2023/rust/day1",
     "2023/rust/day2",
+    "2023/rust/day3",
 ]
