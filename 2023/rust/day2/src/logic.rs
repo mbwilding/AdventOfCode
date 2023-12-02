@@ -28,26 +28,26 @@ pub fn part_1(lines: &[String]) -> i32 {
         .sum()
 }
 
-pub fn part_2(lines: &[String]) -> i32 {
+pub fn part_2(lines: &[String]) -> u32 {
     lines
         .par_iter()
         .map(|game| {
             let sets = game.split(": ").nth(1).unwrap().split("; ");
-            let mut min_cubes: HashMap<&str, i32> = HashMap::new();
+            let mut min_cubes: HashMap<&str, u32> = HashMap::new();
 
             for set in sets {
                 set.split(", ").for_each(|cube| {
                     let parts: Vec<&str> = cube.split_whitespace().collect();
-                    let count = parts[0].parse::<i32>().unwrap();
+                    let count = parts[0].parse::<u32>().unwrap();
                     let color = parts[1];
                     min_cubes
                         .entry(color)
-                        .and_modify(|e| *e = i32::max(*e, count))
+                        .and_modify(|e| *e = u32::max(*e, count))
                         .or_insert(count);
                 });
             }
 
-            min_cubes.values().product::<i32>()
+            min_cubes.values().product::<u32>()
         })
         .sum()
 }

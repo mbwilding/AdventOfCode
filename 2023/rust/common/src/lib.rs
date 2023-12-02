@@ -29,12 +29,10 @@ where
 }
 
 fn read_file_lines(path: &str) -> Vec<String> {
-    let file = File::open(path).expect(&format!("Could not read file: {}", path));
+    let file = File::open(path).unwrap_or_else(|_| panic!("Could not read file: {}", path));
     let reader = BufReader::new(file);
-    let lines = reader
+    reader
         .lines()
         .collect::<Result<Vec<_>, io::Error>>()
-        .expect("Failed to collect file lines");
-
-    lines
+        .expect("Failed to collect file lines")
 }
