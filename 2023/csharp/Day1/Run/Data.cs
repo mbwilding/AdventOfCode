@@ -2,7 +2,7 @@
 
 public static class Data
 {
-    public static Dictionary<string, int> WordToNumberLut = new()
+    public static readonly Dictionary<string, int> NumberLut = new()
     {
         { "one", 1 },
         { "two", 2 },

@@ -18,7 +18,7 @@ public static class Logic
                             var vec = c.Split();
                             var count = int.Parse(vec[0]);
                             var color = vec[1];
-                            return count <= Data.MaxCubes[color];
+                            return count <= Data.MaxCubesLut[color];
                         }));
 
                 return isValid ? gameId : 0;

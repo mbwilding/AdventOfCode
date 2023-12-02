@@ -1,5 +1,5 @@
+use crate::data::*;
 use rayon::prelude::*;
-use std::collections::HashMap;
 
 pub fn part_1(lines: &[String]) -> u32 {
     lines
@@ -19,17 +19,7 @@ pub fn part_1(lines: &[String]) -> u32 {
 }
 
 pub fn part_2(lines: &[String]) -> u32 {
-    let number_lut = HashMap::from([
-        ("one", 1),
-        ("two", 2),
-        ("three", 3),
-        ("four", 4),
-        ("five", 5),
-        ("six", 6),
-        ("seven", 7),
-        ("eight", 8),
-        ("nine", 9),
-    ]);
+    let number_lut = number_lut();
 
     lines
         .par_iter()

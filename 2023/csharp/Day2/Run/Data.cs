@@ -2,7 +2,7 @@
 
 public static class Data
 {
-    public static Dictionary<string, int> MaxCubes = new()
+    public static readonly Dictionary<string, int> MaxCubesLut = new()
     {
         { "red", 12 },
         { "green", 13 },

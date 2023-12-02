@@ -34,11 +34,15 @@ public static class Logic
                         for (int i = 0; i < currentWord.Length; i++)
                         {
                             var currentString = currentWord.ToString(i, currentWord.Length - i);
-                            if (!Data.WordToNumberLut.TryGetValue(currentString, out var number))
+                            if (!Data.NumberLut.TryGetValue(currentString, out var number))
                             {
                                 continue;
                             }
-                            if (first == 0) first = number;
+
+                            if (first == 0)
+                            {
+                                first = number;
+                            }
                             last = number;
                             break;
                         }
@@ -46,7 +50,10 @@ public static class Logic
                     else if (char.IsDigit(c))
                     {
                         var digit = (int)char.GetNumericValue(c);
-                        if (first == 0) first = digit;
+                        if (first == 0)
+                        {
+                            first = digit;
+                        }
                         last = digit;
                         currentWord.Clear();
                     }

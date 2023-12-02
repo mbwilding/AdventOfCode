@@ -1,6 +1,7 @@
 use crate::logic::*;
 use common_2023::*;
 
+mod data;
 mod logic;
 mod tests;
 
