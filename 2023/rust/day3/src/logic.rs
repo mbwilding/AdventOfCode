@@ -1,5 +1,4 @@
 use crate::data::*;
-use rayon::prelude::*;
 use std::collections::HashSet;
 
 pub fn part_1(lines: &[String]) -> u32 {
@@ -81,7 +80,7 @@ pub fn part_2(lines: &[String]) -> u32 {
 
 fn get_rows_of_chars(lines: &[String]) -> Vec<Vec<char>> {
     lines
-        .par_iter()
+        .iter()
         .map(|line| line.chars().collect())
         .collect::<Vec<Vec<char>>>()
 }

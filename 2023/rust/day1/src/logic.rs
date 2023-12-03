@@ -1,9 +1,8 @@
 use crate::data::*;
-use rayon::prelude::*;
 
 pub fn part_1(lines: &[String]) -> u32 {
     lines
-        .par_iter()
+        .iter()
         .map(|line| {
             let digits = line
                 .chars()
@@ -20,7 +19,7 @@ pub fn part_1(lines: &[String]) -> u32 {
 
 pub fn part_2(lines: &[String]) -> u32 {
     lines
-        .par_iter()
+        .iter()
         .map(|line| {
             let mut first = 0u32;
             let mut last = 0u32;

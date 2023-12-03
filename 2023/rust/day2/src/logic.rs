@@ -1,10 +1,9 @@
 use crate::data::*;
-use rayon::prelude::*;
 use std::collections::HashMap;
 
 pub fn part_1(lines: &[String]) -> u32 {
     lines
-        .par_iter()
+        .iter()
         .filter_map(|line| {
             let parts = line.split(": ").collect::<Vec<&str>>();
             let game_id: u32 = parts[0].split_whitespace().last().unwrap().parse().unwrap();
@@ -26,7 +25,7 @@ pub fn part_1(lines: &[String]) -> u32 {
 
 pub fn part_2(lines: &[String]) -> u32 {
     lines
-        .par_iter()
+        .iter()
         .map(|line| {
             line.split(": ")
                 .nth(1)
