@@ -5,22 +5,22 @@ mod tests {
     use common_2023::*;
 
     #[test]
-    fn mock_part_1_test() {
-        test(DAY, "mock", part_1, 0);
+    fn part_1_mock() {
+        test(DAY, "mock", part_1, 4361);
     }
 
     #[test]
-    fn mock_part_2_test() {
+    fn part_1_real() {
+        test(DAY, "real", part_1, 530849);
+    }
+
+    #[test]
+    fn part_2_mock() {
+        test(DAY, "real", part_2, 467835);
+    }
+
+    #[test]
+    fn part_2_real() {
         test(DAY, "mock", part_2, 0);
-    }
-
-    #[test]
-    fn real_part_1_test() {
-        test(DAY, "real", part_1, 0);
-    }
-
-    #[test]
-    fn real_part_2_test() {
-        test(DAY, "real", part_2, 0);
     }
 }

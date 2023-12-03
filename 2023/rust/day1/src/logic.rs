@@ -19,8 +19,6 @@ pub fn part_1(lines: &[String]) -> u32 {
 }
 
 pub fn part_2(lines: &[String]) -> u32 {
-    let number_lut = number_lut();
-
     lines
         .par_iter()
         .map(|line| {
@@ -32,7 +30,7 @@ pub fn part_2(lines: &[String]) -> u32 {
                 if c.is_alphabetic() {
                     current_word.push(c);
                     for i in 0..current_word.len() {
-                        if let Some(&number) = number_lut.get(&current_word[i..]) {
+                        if let Some(&number) = NUMBER_LUT.get(&current_word[i..]) {
                             if first == 0 {
                                 first = number;
                             }

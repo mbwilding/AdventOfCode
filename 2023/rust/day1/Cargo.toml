@@ -6,4 +6,5 @@ edition = "2021"
 [dependencies]
 common_2023 = { path = "../common" }
 
+lazy_static = "1.4"
 rayon = "1.8"

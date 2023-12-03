@@ -3,8 +3,6 @@ use rayon::prelude::*;
 use std::collections::HashMap;
 
 pub fn part_1(lines: &[String]) -> u32 {
-    let max_cubes = max_cubes_lut();
-
     lines
         .par_iter()
         .filter_map(|line| {
@@ -18,7 +16,7 @@ pub fn part_1(lines: &[String]) -> u32 {
                         let vec = c.split_whitespace().collect::<Vec<&str>>();
                         let count: u32 = vec[0].parse().unwrap();
                         let color = vec[1];
-                        count <= *max_cubes.get(color).unwrap()
+                        count <= *MAX_CUBES_LUT.get(color).unwrap()
                     })
                 })
                 .then_some(game_id)

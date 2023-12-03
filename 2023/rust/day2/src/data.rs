@@ -1,5 +1,7 @@
+use lazy_static::lazy_static;
 use std::collections::HashMap;
 
-pub fn max_cubes_lut() -> HashMap<&'static str, u32> {
-    HashMap::from([("red", 12), ("green", 13), ("blue", 14)])
+lazy_static! {
+    pub static ref MAX_CUBES_LUT: HashMap<&'static str, u32> =
+        HashMap::from([("red", 12), ("green", 13), ("blue", 14)]);
 }
