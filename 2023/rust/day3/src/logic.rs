@@ -85,17 +85,14 @@ pub fn part_2(lines: &[String]) -> u64 {
 }
 
 fn extract_number(rows: &[Vec<char>], row: usize, col: usize) -> String {
-    let mut number_str = String::new();
-    let mut c = col;
+    let start = rows[row]
+        .iter()
+        .take(col)
+        .rposition(|&c| !c.is_ascii_digit())
+        .map_or(0, |pos| pos + 1);
 
-    while c > 0 && rows[row][c - 1].is_ascii_digit() {
-        c -= 1;
-    }
-
-    while c < rows[row].len() && rows[row][c].is_ascii_digit() {
-        number_str.push(rows[row][c]);
-        c += 1;
-    }
-
-    number_str
+    rows[row][start..]
+        .iter()
+        .take_while(|&&c| c.is_ascii_digit())
+        .collect()
 }
