@@ -10,31 +10,31 @@ pub fn part_1(lines: &[String]) -> u32 {
     let mut sum = 0;
     let mut processed = vec![vec![false; rows[0].len()]; rows.len()];
 
-    for (i, row) in rows.iter().enumerate() {
-        for (j, cell) in row.iter().enumerate() {
-            if !cell.is_ascii_digit() || processed[i][j] {
+    for (row_i, row) in rows.iter().enumerate() {
+        for (cell_i, cell) in row.iter().enumerate() {
+            if !cell.is_ascii_digit() || processed[row_i][cell_i] {
                 continue;
             }
 
             let number = row
                 .iter()
-                .skip(j)
+                .skip(cell_i)
                 .take_while(|c| c.is_ascii_digit())
                 .enumerate()
                 .map(|(offset, c)| {
-                    processed[i][j + offset] = true;
+                    processed[row_i][cell_i + offset] = true;
                     c
                 })
                 .collect::<String>();
 
             let adjacent_to_symbol = (0..number.len()).any(|n| {
                 DIRECTIONS.iter().any(|&(di, dj)| {
-                    let (new_i, new_j) = (
-                        (i as i16 + di) as usize,
-                        (j as i16 + dj + n as i16) as usize,
+                    let (d_row_i, d_cell_i) = (
+                        (row_i as i16 + di) as usize,
+                        (cell_i as i16 + dj + n as i16) as usize,
                     );
-                    new_i < rows.len() && new_j < row.len() && {
-                        let adjacent_cell = rows[new_i][new_j];
+                    d_row_i < rows.len() && d_cell_i < row.len() && {
+                        let adjacent_cell = rows[d_row_i][d_cell_i];
                         adjacent_cell != '.' && !adjacent_cell.is_ascii_digit()
                     }
                 })
