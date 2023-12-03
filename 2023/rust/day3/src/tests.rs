@@ -16,11 +16,11 @@ mod tests {
 
     #[test]
     fn part_2_mock() {
-        test(DAY, "real", part_2, 467835);
+        test(DAY, "mock", part_2, 467835);
     }
 
     #[test]
     fn part_2_real() {
-        test(DAY, "mock", part_2, 0);
+        test(DAY, "real", part_2, 84900879);
     }
 }
