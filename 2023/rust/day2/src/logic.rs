@@ -13,7 +13,7 @@ pub fn part_1(lines: &[String]) -> u32 {
                 .all(|set| {
                     set.split(", ").all(|c| {
                         let vec = c.split_whitespace().collect::<Vec<_>>();
-                        let count: u32 = vec[0].parse().unwrap();
+                        let count = vec[0].parse::<u32>().unwrap();
                         let color = vec[1];
                         count <= *MAX_CUBES_LUT.get(color).unwrap()
                     })
@@ -38,7 +38,7 @@ pub fn part_2(lines: &[String]) -> u32 {
                         let color = parts[1];
                         min_cubes
                             .entry(color)
-                            .and_modify(|e| *e = u32::max(*e, count))
+                            .and_modify(|current| *current = u32::max(*current, count))
                             .or_insert(count);
                     });
                     min_cubes
