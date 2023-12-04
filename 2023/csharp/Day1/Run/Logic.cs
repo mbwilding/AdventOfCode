@@ -4,8 +4,8 @@ namespace Day1;
 
 public static class Logic
 {
-    public static int Part1(IEnumerable<string> lines) =>
-        lines.AsParallel()
+    public static int Part1(List<string> lines) =>
+        lines
             .Select(line =>
             {
                 var digits = line.Where(char.IsDigit)
@@ -19,8 +19,8 @@ public static class Logic
             })
             .Sum();
 
-    public static int Part2(IEnumerable<string> lines) =>
-        lines.AsParallel()
+    public static int Part2(List<string> lines) =>
+        lines
             .Select(line =>
             {
                 int first = 0, last = 0;

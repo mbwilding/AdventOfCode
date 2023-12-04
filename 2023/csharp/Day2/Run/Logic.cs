@@ -2,9 +2,8 @@
 
 public static class Logic
 {
-    public static int Part1(IEnumerable<string> lines) =>
+    public static int Part1(List<string> lines) =>
         lines
-            .AsParallel()
             .Select(line =>
             {
                 var parts = line.Split(": ");
@@ -25,9 +24,8 @@ public static class Logic
             })
             .Sum();
 
-    public static int Part2(IEnumerable<string> lines) =>
+    public static int Part2(List<string> lines) =>
         lines
-            .AsParallel()
             .Select(line => line.Split(": ")[1]
                 .Split("; ")
                 .SelectMany(set => set.Split(", "))
