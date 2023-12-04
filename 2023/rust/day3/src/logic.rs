@@ -18,20 +18,7 @@ pub fn part_1(lines: &[String]) -> u32 {
 
             let number_str = extract_number(&rows, row_i, col_i);
 
-            let adjacent_to_symbol = (0..number_str.len()).any(|n| {
-                DIRECTIONS.iter().any(|&(di, dj)| {
-                    let (d_row_i, d_cell_i) = (
-                        (row_i as i16 + di) as usize,
-                        (col_i as i16 + dj + n as i16) as usize,
-                    );
-                    d_row_i < rows.len() && d_cell_i < row_chars.len() && {
-                        let adjacent_cell = rows[d_row_i][d_cell_i];
-                        adjacent_cell != '.' && !adjacent_cell.is_ascii_digit()
-                    }
-                })
-            });
-
-            if adjacent_to_symbol {
+            if adjacent_to_symbol(&rows, row_i, row_chars, col_i, &number_str) {
                 sum += number_str.parse::<u32>().unwrap();
             }
 
@@ -80,6 +67,27 @@ pub fn part_2(lines: &[String]) -> u32 {
 
 fn get_rows_of_chars(lines: &[String]) -> Vec<Vec<char>> {
     lines.iter().map(|line| line.chars().collect()).collect()
+}
+
+fn adjacent_to_symbol(
+    rows: &Vec<Vec<char>>,
+    row_i: usize,
+    row_chars: &Vec<char>,
+    col_i: usize,
+    number_str: &String,
+) -> bool {
+    (0..number_str.len()).any(|n| {
+        DIRECTIONS.iter().any(|&(di, dj)| {
+            let (d_row_i, d_cell_i) = (
+                (row_i as i16 + di) as usize,
+                (col_i as i16 + dj + n as i16) as usize,
+            );
+            d_row_i < rows.len() && d_cell_i < row_chars.len() && {
+                let adjacent_cell = rows[d_row_i][d_cell_i];
+                adjacent_cell != '.' && !adjacent_cell.is_ascii_digit()
+            }
+        })
+    })
 }
 
 fn extract_number(rows: &[Vec<char>], row: usize, col: usize) -> String {
