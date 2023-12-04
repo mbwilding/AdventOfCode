@@ -5,10 +5,15 @@ pub fn part_1(lines: &[String]) -> u32 {
     lines
         .iter()
         .filter_map(|line| {
-            let parts = line.split(": ").collect::<Vec<_>>();
-            let game_id: u32 = parts[0].split_whitespace().last().unwrap().parse().unwrap();
+            let (game_info, game_data) = line.split_once(": ").unwrap();
+            let game_id: u32 = game_info
+                .split_whitespace()
+                .last()
+                .unwrap()
+                .parse()
+                .unwrap();
 
-            parts[1]
+            game_data
                 .split("; ")
                 .all(|set| {
                     set.split(", ").all(|c| {
