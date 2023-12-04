@@ -2,27 +2,33 @@ use crate::data::*;
 use std::collections::HashSet;
 
 pub fn part_1(lines: &[String]) -> u32 {
-    let rows = get_rows_of_chars(lines);
+    let grid = get_rows_of_chars(lines);
 
     let mut sum = 0;
 
-    for (row_i, row_chars) in rows.iter().enumerate() {
-        let mut col_i = 0;
-        while col_i < row_chars.len() {
-            let cell_char = row_chars[col_i];
+    for (current_row_index, current_row) in grid.iter().enumerate() {
+        let mut current_col_index = 0;
+        while current_col_index < current_row.len() {
+            let current_cell = current_row[current_col_index];
 
-            if !cell_char.is_ascii_digit() {
-                col_i += 1;
+            if !current_cell.is_ascii_digit() {
+                current_col_index += 1;
                 continue;
             }
 
-            let number_str = extract_number(&rows, row_i, col_i);
+            let number_string = extract_number(&grid, current_row_index, current_col_index);
 
-            if adjacent_to_symbol(&rows, row_i, row_chars, col_i, &number_str) {
-                sum += number_str.parse::<u32>().unwrap();
+            if adjacent_to_symbol(
+                &grid,
+                current_row_index,
+                current_row,
+                current_col_index,
+                &number_string,
+            ) {
+                sum += number_string.parse::<u32>().unwrap();
             }
 
-            col_i += number_str.len();
+            current_col_index += number_string.len();
         }
     }
 
@@ -30,33 +36,36 @@ pub fn part_1(lines: &[String]) -> u32 {
 }
 
 pub fn part_2(lines: &[String]) -> u32 {
-    let rows = get_rows_of_chars(lines);
+    let grid = get_rows_of_chars(lines);
 
     let mut sum = 0;
 
-    for (row_i, row) in rows.iter().enumerate() {
-        for (col_i, &cell_char) in row.iter().enumerate() {
-            if cell_char == '*' {
-                let mut part_numbers: HashSet<u32> = HashSet::new();
+    for (current_row_index, current_row) in grid.iter().enumerate() {
+        for (current_col_index, &current_cell) in current_row.iter().enumerate() {
+            if current_cell == '*' {
+                let mut adjacent_numbers: HashSet<u32> = HashSet::new();
 
-                for &(di, dj) in DIRECTIONS.iter() {
-                    let (adj_row, adj_col) =
-                        ((row_i as i16 + di) as usize, (col_i as i16 + dj) as usize);
+                for &(row_offset, col_offset) in DIRECTIONS.iter() {
+                    let (adjacent_row_index, adjacent_col_index) = (
+                        (current_row_index as i16 + row_offset) as usize,
+                        (current_col_index as i16 + col_offset) as usize,
+                    );
 
-                    if adj_row < rows.len() && adj_col < rows[0].len() {
-                        let adj_cell = rows[adj_row][adj_col];
-                        if adj_cell.is_ascii_digit() {
-                            let number_str = extract_number(&rows, adj_row, adj_col);
-                            if let Ok(num) = number_str.parse::<u32>() {
-                                part_numbers.insert(num);
+                    if adjacent_row_index < grid.len() && adjacent_col_index < grid[0].len() {
+                        let adjacent_cell = grid[adjacent_row_index][adjacent_col_index];
+                        if adjacent_cell.is_ascii_digit() {
+                            let number_string =
+                                extract_number(&grid, adjacent_row_index, adjacent_col_index);
+                            if let Ok(number) = number_string.parse::<u32>() {
+                                adjacent_numbers.insert(number);
                             }
                         }
                     }
                 }
 
-                if part_numbers.len() == 2 {
-                    let mut iter = part_numbers.into_iter();
-                    sum += iter.next().unwrap() * iter.next().unwrap();
+                if adjacent_numbers.len() == 2 {
+                    let mut number_iter = adjacent_numbers.into_iter();
+                    sum += number_iter.next().unwrap() * number_iter.next().unwrap();
                 }
             }
         }
@@ -70,20 +79,20 @@ fn get_rows_of_chars(lines: &[String]) -> Vec<Vec<char>> {
 }
 
 fn adjacent_to_symbol(
-    rows: &Vec<Vec<char>>,
-    row_i: usize,
-    row_chars: &Vec<char>,
-    col_i: usize,
-    number_str: &String,
+    grid: &Vec<Vec<char>>,
+    current_row_index: usize,
+    current_row: &Vec<char>,
+    current_col_index: usize,
+    number_as_string: &str,
 ) -> bool {
-    (0..number_str.len()).any(|n| {
-        DIRECTIONS.iter().any(|&(di, dj)| {
-            let (d_row_i, d_cell_i) = (
-                (row_i as i16 + di) as usize,
-                (col_i as i16 + dj + n as i16) as usize,
+    (0..number_as_string.len()).any(|number_char_index| {
+        DIRECTIONS.iter().any(|&(row_offset, col_offset)| {
+            let (adjacent_row_index, adjacent_col_index) = (
+                (current_row_index as i16 + row_offset) as usize,
+                (current_col_index as i16 + col_offset + number_char_index as i16) as usize,
             );
-            d_row_i < rows.len() && d_cell_i < row_chars.len() && {
-                let adjacent_cell = rows[d_row_i][d_cell_i];
+            adjacent_row_index < grid.len() && adjacent_col_index < current_row.len() && {
+                let adjacent_cell = grid[adjacent_row_index][adjacent_col_index];
                 adjacent_cell != '.' && !adjacent_cell.is_ascii_digit()
             }
         })
@@ -94,11 +103,11 @@ fn extract_number(rows: &[Vec<char>], row: usize, col: usize) -> String {
     let start = rows[row]
         .iter()
         .take(col)
-        .rposition(|&c| !c.is_ascii_digit())
+        .rposition(|c| !c.is_ascii_digit())
         .map_or(0, |pos| pos + 1);
 
     rows[row][start..]
         .iter()
-        .take_while(|&&c| c.is_ascii_digit())
+        .take_while(|c| c.is_ascii_digit())
         .collect()
 }
