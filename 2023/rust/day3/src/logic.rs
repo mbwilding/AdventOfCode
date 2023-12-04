@@ -79,10 +79,7 @@ pub fn part_2(lines: &[String]) -> u32 {
 }
 
 fn get_rows_of_chars(lines: &[String]) -> Vec<Vec<char>> {
-    lines
-        .iter()
-        .map(|line| line.chars().collect())
-        .collect::<Vec<Vec<char>>>()
+    lines.iter().map(|line| line.chars().collect()).collect()
 }
 
 fn extract_number(rows: &[Vec<char>], row: usize, col: usize) -> String {
