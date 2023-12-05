@@ -11,4 +11,5 @@ members = [
     "2023/rust/day2",
     "2023/rust/day3",
     "2023/rust/day4",
+    "2023/rust/day5",
 ]
