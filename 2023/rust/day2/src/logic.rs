@@ -1,4 +1,4 @@
-use crate::data::*;
+use lazy_static::lazy_static;
 use std::collections::HashMap;
 
 pub fn part_1(lines: &[String]) -> u32 {
@@ -52,4 +52,9 @@ pub fn part_2(lines: &[String]) -> u32 {
                 .product::<u32>()
         })
         .sum()
+}
+
+lazy_static! {
+    pub static ref MAX_CUBES_LUT: HashMap<&'static str, u32> =
+        HashMap::from([("red", 12), ("green", 13), ("blue", 14)]);
 }

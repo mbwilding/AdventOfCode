@@ -1,4 +1,3 @@
-use crate::data::*;
 use std::collections::HashSet;
 
 pub fn part_1(lines: &[String]) -> u32 {
@@ -123,3 +122,14 @@ fn extract_number(rows: &[Vec<char>], row: usize, col: usize) -> String {
         .take_while(|c| c.is_ascii_digit())
         .collect()
 }
+
+pub const DIRECTIONS: [(i16, i16); 8] = [
+    (-1, -1),
+    (-1, 0),
+    (-1, 1),
+    (0, -1),
+    (0, 1),
+    (1, -1),
+    (1, 0),
+    (1, 1),
+];

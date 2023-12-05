@@ -13,3 +13,12 @@ members = [
     "2023/rust/day4",
     "2023/rust/day5",
 ]
+
+[profile.dev]
+opt-level = 3
+
+[profile.release]
+opt-level = 3
+
+[profile.test]
+opt-level = 3
