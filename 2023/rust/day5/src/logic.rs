@@ -4,7 +4,7 @@ pub fn part_1(lines: &[String]) -> usize {
     let seeds = extract_seeds(lines);
     let sections = split_at_blank_lines(&lines[2..]);
     let maps = sections_to_maps(&sections);
-    calculate_lowest_location_part_1(&seeds, &maps)
+    calculate_lowest_location(&seeds, &maps)
 }
 
 pub fn part_2(lines: &[String]) -> usize {
@@ -12,7 +12,8 @@ pub fn part_2(lines: &[String]) -> usize {
     let seeds = generate_seed_numbers(seed_ranges);
     let sections = split_at_blank_lines(&lines[2..]);
     let maps = sections_to_maps(&sections);
-    calculate_lowest_location_part_2(seeds, &maps)
+    calculate_lowest_location(&seeds, &maps)
+    //calculate_lowest_location_part_2(seeds, &maps)
 }
 
 fn extract_seeds(lines: &[String]) -> Vec<usize> {
@@ -60,18 +61,16 @@ fn sections_to_maps(sections: &[Vec<&str>]) -> Vec<Vec<Map>> {
         .collect()
 }
 
-fn calculate_lowest_location_part_1(seeds: &Vec<usize>, maps: &Vec<Vec<Map>>) -> usize {
-    let mut lowest_location = usize::MAX;
-
-    for &seed in seeds {
-        let mut current_seed = seed;
-        for map in maps {
-            current_seed = map_value_through_map(current_seed, map);
-        }
-        lowest_location = lowest_location.min(current_seed);
-    }
-
-    lowest_location
+fn calculate_lowest_location(seeds: &[usize], maps: &[Vec<Map>]) -> usize {
+    seeds
+        .par_iter()
+        .map(|&seed| {
+            maps.iter().fold(seed, |current_seed, map| {
+                map_value_through_map(current_seed, map)
+            })
+        })
+        .min()
+        .unwrap_or(usize::MAX)
 }
 
 fn map_value_through_map(seed: usize, map: &Vec<Map>) -> usize {
@@ -106,14 +105,6 @@ fn generate_seed_numbers(ranges: Vec<(usize, usize)>) -> Vec<usize> {
         seeds.extend(start..start + length);
     }
     seeds
-}
-
-fn calculate_lowest_location_part_2(seeds: Vec<usize>, maps: &Vec<Vec<Map>>) -> usize {
-    seeds
-        .par_iter()
-        .map(|&seed| calculate_lowest_location_part_1(&vec![seed], maps))
-        .min()
-        .unwrap()
 }
 
 struct Map {
