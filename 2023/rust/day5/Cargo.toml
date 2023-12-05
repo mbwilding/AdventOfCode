@@ -5,3 +5,4 @@ edition = "2021"
 
 [dependencies]
 common_2023 = { path = "../common" }
+rayon = "1.8"
