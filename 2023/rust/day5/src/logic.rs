@@ -13,7 +13,6 @@ pub fn part_2(lines: &[String]) -> usize {
     let sections = split_at_blank_lines(&lines[2..]);
     let maps = sections_to_maps(&sections);
     calculate_lowest_location(&seeds, &maps)
-    //calculate_lowest_location_part_2(seeds, &maps)
 }
 
 fn extract_seeds(lines: &[String]) -> Vec<usize> {
