@@ -76,8 +76,8 @@ fn calculate_lowest_location_part_1(seeds: &Vec<usize>, maps: &Vec<Vec<Map>>) ->
 
 fn map_value_through_map(seed: usize, map: &Vec<Map>) -> usize {
     for current in map {
-        if seed >= current.src_range_start && seed < current.src_range_start + current.range {
-            return current.dst_range_start + (seed - current.src_range_start);
+        if seed >= current.source && seed < current.source + current.range {
+            return current.destination + (seed - current.source);
         }
     }
 
@@ -116,10 +116,9 @@ fn calculate_lowest_location_part_2(seeds: Vec<usize>, maps: &Vec<Vec<Map>>) -> 
         .unwrap()
 }
 
-#[derive(Debug, Clone)]
 struct Map {
-    dst_range_start: usize,
-    src_range_start: usize,
+    destination: usize,
+    source: usize,
     range: usize,
 }
 
@@ -128,8 +127,8 @@ impl Map {
         let mut split = line.split_whitespace().map(|s| s.parse::<usize>().unwrap());
 
         Self {
-            dst_range_start: split.next().unwrap(),
-            src_range_start: split.next().unwrap(),
+            destination: split.next().unwrap(),
+            source: split.next().unwrap(),
             range: split.next().unwrap(),
         }
     }
