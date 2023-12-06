@@ -5,7 +5,7 @@ pub fn part_1(lines: &[String]) -> u32 {
     lines
         .iter()
         .filter_map(|line| {
-            let (game_info, game_data) = line.split_once(": ").unwrap();
+            let (game_info, game_data) = line.split_once(':').unwrap();
             let game_id: u32 = game_info
                 .split_whitespace()
                 .last()
@@ -14,9 +14,9 @@ pub fn part_1(lines: &[String]) -> u32 {
                 .unwrap();
 
             game_data
-                .split("; ")
+                .split(';')
                 .all(|set| {
-                    set.split(", ").all(|c| {
+                    set.split(',').all(|c| {
                         let vec = c.split_whitespace().collect::<Vec<_>>();
                         let count = vec[0].parse::<u32>().unwrap();
                         let color = vec[1];
@@ -32,12 +32,12 @@ pub fn part_2(lines: &[String]) -> u32 {
     lines
         .iter()
         .map(|line| {
-            line.split(": ")
+            line.split(':')
                 .nth(1)
                 .unwrap()
-                .split("; ")
+                .split(';')
                 .fold(HashMap::new(), |mut min_cubes, set| {
-                    set.split(", ").for_each(|cube| {
+                    set.split(',').for_each(|cube| {
                         let parts = cube.split_whitespace().collect::<Vec<_>>();
                         let count = parts[0].parse().unwrap();
                         let color = parts[1];
