@@ -19,7 +19,7 @@ pub fn part_2(lines: &[String]) -> usize {
 
 fn extract_seeds(lines: &[String]) -> Vec<usize> {
     lines[0]
-        .split_once("seeds: ")
+        .split_once(':')
         .unwrap()
         .1
         .split_whitespace()
@@ -86,7 +86,7 @@ fn map_value_through_map(seed: usize, map: &Vec<Map>) -> usize {
 
 fn extract_seed_ranges(lines: &[String]) -> Vec<(usize, usize)> {
     lines[0]
-        .split_once("seeds: ")
+        .split_once(':')
         .unwrap()
         .1
         .split_whitespace()

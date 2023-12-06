@@ -14,8 +14,8 @@ fn extract_cards(lines: &[String]) -> (Vec<Vec<u8>>, Vec<Vec<u8>>) {
     lines.iter().fold(
         (Vec::new(), Vec::new()),
         |(mut winning_cards, mut player_cards), line| {
-            let (_card, numbers_pre_split) = line.split_once(": ").unwrap();
-            let (winning_numbers, player_numbers) = numbers_pre_split.split_once(" | ").unwrap();
+            let (_card, numbers_pre_split) = line.split_once(':').unwrap();
+            let (winning_numbers, player_numbers) = numbers_pre_split.split_once('|').unwrap();
 
             winning_cards.push(line_to_numbers(winning_numbers));
             player_cards.push(line_to_numbers(player_numbers));
