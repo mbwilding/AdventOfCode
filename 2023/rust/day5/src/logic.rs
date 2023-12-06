@@ -21,7 +21,7 @@ fn extract_seeds(lines: &[String]) -> Vec<usize> {
         .unwrap()
         .1
         .split_whitespace()
-        .map(|x| x.parse::<usize>().unwrap())
+        .map(|x| x.parse().unwrap())
         .collect::<Vec<_>>()
 }
 
@@ -55,7 +55,7 @@ fn sections_to_maps(sections: &[Vec<&str>]) -> Vec<Vec<Map>> {
                 .iter()
                 .skip(1)
                 .map(|line| Map::from_line(line))
-                .collect::<Vec<_>>()
+                .collect()
         })
         .collect()
 }
@@ -69,7 +69,7 @@ fn calculate_lowest_location(seeds: &[usize], maps: &[Vec<Map>]) -> usize {
             })
         })
         .min()
-        .unwrap_or(usize::MAX)
+        .unwrap()
 }
 
 fn map_value_through_map(seed: usize, map: &Vec<Map>) -> usize {
@@ -91,8 +91,8 @@ fn extract_seed_ranges(lines: &[String]) -> Vec<(usize, usize)> {
         .collect::<Vec<_>>()
         .chunks(2)
         .map(|chunk| {
-            let start = chunk[0].parse::<usize>().unwrap();
-            let length = chunk[1].parse::<usize>().unwrap();
+            let start = chunk[0].parse().unwrap();
+            let length = chunk[1].parse().unwrap();
             (start, length)
         })
         .collect()
@@ -114,7 +114,7 @@ struct Map {
 
 impl Map {
     fn from_line(line: &str) -> Self {
-        let mut split = line.split_whitespace().map(|s| s.parse::<usize>().unwrap());
+        let mut split = line.split_whitespace().map(|s| s.parse().unwrap());
 
         Self {
             destination: split.next().unwrap(),

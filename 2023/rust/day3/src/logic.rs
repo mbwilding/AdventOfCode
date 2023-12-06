@@ -95,7 +95,7 @@ fn product_from_adjacent_cells(
             let adjacent_cell = grid[adjacent_row_index][adjacent_col_index];
             if adjacent_cell.is_ascii_digit() {
                 let number_string = extract_number(grid, adjacent_row_index, adjacent_col_index);
-                if let Ok(number) = number_string.parse::<u32>() {
+                if let Ok(number) = number_string.parse() {
                     adjacent_numbers.insert(number);
                 }
             }

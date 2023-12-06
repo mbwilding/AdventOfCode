@@ -25,7 +25,7 @@ fn extract_cards(lines: &[String]) -> (Vec<Vec<u8>>, Vec<Vec<u8>>) {
 
 fn line_to_numbers(line: &str) -> Vec<u8> {
     line.split_whitespace()
-        .filter_map(|n| n.parse::<u8>().ok())
+        .filter_map(|n| n.parse().ok())
         .collect()
 }
 

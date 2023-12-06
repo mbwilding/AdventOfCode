@@ -39,7 +39,7 @@ pub fn part_2(lines: &[String]) -> u32 {
                 .fold(HashMap::new(), |mut min_cubes, set| {
                     set.split(", ").for_each(|cube| {
                         let parts = cube.split_whitespace().collect::<Vec<_>>();
-                        let count = parts[0].parse::<u32>().unwrap();
+                        let count = parts[0].parse().unwrap();
                         let color = parts[1];
                         min_cubes
                             .entry(color)
