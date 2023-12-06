@@ -10,10 +10,10 @@ pub fn part_1(lines: &[String]) -> usize {
 }
 
 pub fn part_2(lines: &[String]) -> usize {
-    let times = extract_number(&lines[0]);
-    let distances = extract_number(&lines[1]);
+    let time = extract_number(&lines[0]);
+    let distance = extract_number(&lines[1]);
 
-    calculate_ways_to_win(times, distances)
+    calculate_ways_to_win(time, distance)
 }
 
 fn extract_numbers(line: &str) -> Vec<usize> {
