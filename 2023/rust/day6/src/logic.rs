@@ -21,7 +21,7 @@ fn extract_numbers(line: &str) -> Vec<usize> {
         .unwrap()
         .1
         .split_whitespace()
-        .map(|s| s.parse::<usize>().unwrap())
+        .map(|s| s.parse().unwrap())
         .collect()
 }
 
@@ -30,7 +30,7 @@ fn extract_number(line: &str) -> usize {
         .unwrap()
         .1
         .replace(' ', "")
-        .parse::<usize>()
+        .parse()
         .unwrap()
 }
 
