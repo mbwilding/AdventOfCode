@@ -2,14 +2,18 @@ pub fn part_1(lines: &[String]) -> usize {
     let times = extract_numbers(&lines[0]);
     let distances = extract_numbers(&lines[1]);
 
-    calculate_ways_to_win_and_multiply(&times, &distances)
+    times
+        .iter()
+        .zip(distances.iter())
+        .map(|(&time, &distance)| calculate_ways_to_win(time, distance))
+        .product()
 }
 
 pub fn part_2(lines: &[String]) -> usize {
-    let time = extract_number(&lines[0]);
-    let distance = extract_number(&lines[1]);
+    let times = extract_number(&lines[0]);
+    let distances = extract_number(&lines[1]);
 
-    calculate_ways_to_win(time, distance)
+    calculate_ways_to_win(times, distances)
 }
 
 fn extract_numbers(line: &str) -> Vec<usize> {
@@ -18,7 +22,7 @@ fn extract_numbers(line: &str) -> Vec<usize> {
         .1
         .split_whitespace()
         .map(|s| s.parse::<usize>().unwrap())
-        .collect::<Vec<_>>()
+        .collect()
 }
 
 fn extract_number(line: &str) -> usize {
@@ -28,16 +32,6 @@ fn extract_number(line: &str) -> usize {
         .replace(' ', "")
         .parse::<usize>()
         .unwrap()
-}
-
-fn calculate_ways_to_win_and_multiply(times: &[usize], distances: &[usize]) -> usize {
-    times
-        .iter()
-        .zip(distances)
-        .map(|(&time, &distance)| calculate_ways_to_win(time, distance))
-        .collect::<Vec<usize>>()
-        .iter()
-        .product()
 }
 
 fn calculate_ways_to_win(time: usize, distance: usize) -> usize {
