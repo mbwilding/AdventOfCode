@@ -4,6 +4,7 @@ pub fn part_1(lines: &[String]) -> usize {
     let seeds = extract_seeds(lines);
     let sections = split_at_blank_lines(&lines[2..]);
     let maps = sections_to_maps(&sections);
+
     calculate_lowest_location(&seeds, &maps)
 }
 
@@ -12,6 +13,7 @@ pub fn part_2(lines: &[String]) -> usize {
     let seeds = generate_seed_numbers(seed_ranges);
     let sections = split_at_blank_lines(&lines[2..]);
     let maps = sections_to_maps(&sections);
+
     calculate_lowest_location(&seeds, &maps)
 }
 

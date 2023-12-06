@@ -1,10 +1,12 @@
 pub fn part_1(lines: &[String]) -> u32 {
     let (winning, player) = extract_cards(lines);
+
     total_points(&winning, &player)
 }
 
 pub fn part_2(lines: &[String]) -> u32 {
     let (winning, player) = extract_cards(lines);
+
     total_cards(&winning, &player)
 }
 
