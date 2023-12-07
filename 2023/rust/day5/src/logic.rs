@@ -1,30 +1,46 @@
 use rayon::prelude::*;
+use std::str::SplitWhitespace;
 
 pub fn part_1(lines: &[String]) -> usize {
     let seeds = extract_seeds(lines);
-    let sections = split_at_blank_lines(&lines[2..]);
-    let maps = sections_to_maps(&sections);
 
-    calculate_lowest_location(&seeds, &maps)
+    execute(&lines, &seeds)
 }
 
 pub fn part_2(lines: &[String]) -> usize {
-    let seed_ranges = extract_seed_ranges(lines);
-    let seeds = generate_seed_numbers(seed_ranges);
+    let seeds = generate_seeds(lines);
+
+    execute(&lines, &seeds)
+}
+
+fn execute(lines: &&[String], seeds: &[usize]) -> usize {
     let sections = split_at_blank_lines(&lines[2..]);
     let maps = sections_to_maps(&sections);
 
-    calculate_lowest_location(&seeds, &maps)
+    calculate_lowest_location(seeds, &maps)
 }
 
 fn extract_seeds(lines: &[String]) -> Vec<usize> {
-    lines[0]
-        .split_once(':')
-        .unwrap()
-        .1
-        .split_whitespace()
+    split_seeds_whitespace(lines)
         .map(|x| x.parse().unwrap())
         .collect::<Vec<_>>()
+}
+
+fn generate_seeds(lines: &[String]) -> Vec<usize> {
+    split_seeds_whitespace(lines)
+        .collect::<Vec<_>>()
+        .chunks(2)
+        .fold(Vec::new(), |mut seeds, chunk| {
+            let start = chunk[0].parse::<usize>().unwrap();
+            let length = chunk[1].parse::<usize>().unwrap();
+            seeds.extend(start..start + length);
+
+            seeds
+        })
+}
+
+fn split_seeds_whitespace(lines: &[String]) -> SplitWhitespace {
+    lines[0].split_once(':').unwrap().1.split_whitespace()
 }
 
 fn split_at_blank_lines(lines: &[String]) -> Vec<Vec<&str>> {
@@ -82,30 +98,6 @@ fn map_value_through_map(seed: usize, map: &Vec<Map>) -> usize {
     }
 
     seed
-}
-
-fn extract_seed_ranges(lines: &[String]) -> Vec<(usize, usize)> {
-    lines[0]
-        .split_once(':')
-        .unwrap()
-        .1
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .chunks(2)
-        .map(|chunk| {
-            let start = chunk[0].parse().unwrap();
-            let length = chunk[1].parse().unwrap();
-            (start, length)
-        })
-        .collect()
-}
-
-fn generate_seed_numbers(ranges: Vec<(usize, usize)>) -> Vec<usize> {
-    let mut seeds = Vec::new();
-    for (start, length) in ranges {
-        seeds.extend(start..start + length);
-    }
-    seeds
 }
 
 struct Map {
