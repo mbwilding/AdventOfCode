@@ -12,14 +12,15 @@ fn execute(lines: &[String], joker: bool) -> u32 {
     let mut hands = lines
         .iter()
         .map(|line| {
-            let (hand, bid) = parse_line(line);
-            if joker {
-                (classify_hand_joker(hand), bid)
+            let (cards, bid) = parse_line(line);
+            let hand = if joker {
+                classify_hand_joker(cards)
             } else {
-                (classify_hand_normal(hand), bid)
-            }
+                classify_hand_normal(cards)
+            };
+            HandBid { hand, bid }
         })
-        .collect::<Vec<(Hand, u32)>>();
+        .collect::<Vec<_>>();
 
     sort_hand(&mut hands, joker);
 
@@ -28,10 +29,11 @@ fn execute(lines: &[String], joker: bool) -> u32 {
 
 fn parse_line(line: &str) -> (&str, u32) {
     let parts: Vec<&str> = line.split_whitespace().collect();
+
     (parts[0], parts[1].parse().unwrap())
 }
 
-fn classify_hand_normal(hand: &str) -> Hand {
+fn classify_hand_normal(hand: &str) -> HandPlay {
     let mut counts = HashMap::new();
     for card in hand.chars() {
         *counts.entry(card).or_insert(0) += 1;
@@ -41,31 +43,31 @@ fn classify_hand_normal(hand: &str) -> Hand {
     let max_count = counts.values().max().unwrap();
 
     let hand_type = match (unique_cards, max_count) {
-        (1, 5) => HandType::FiveOfAKind,
-        (2, 4) => HandType::FourOfAKind,
-        (2, 3) => HandType::FullHouse,
-        (3, 3) => HandType::ThreeOfAKind,
-        (3, 2) => HandType::TwoPair,
-        (4, 2) => HandType::OnePair,
-        _ => HandType::HighCard,
+        (1, 5) => Play::FiveOfAKind,
+        (2, 4) => Play::FourOfAKind,
+        (2, 3) => Play::FullHouse,
+        (3, 3) => Play::ThreeOfAKind,
+        (3, 2) => Play::TwoPair,
+        (4, 2) => Play::OnePair,
+        _ => Play::HighCard,
     };
 
-    Hand {
-        hand_str: hand.into(),
-        hand_type,
+    HandPlay {
+        string: hand.into(),
+        play: hand_type,
     }
 }
 
-fn classify_hand_joker(hand: &str) -> Hand {
+fn classify_hand_joker(cards: &str) -> HandPlay {
     let mut counts = HashMap::new();
 
-    if hand == "JJJJJ" {
-        return Hand {
-            hand_str: hand.into(),
-            hand_type: HandType::FiveOfAKind,
+    if cards == "JJJJJ" {
+        return HandPlay {
+            string: cards.into(),
+            play: Play::FiveOfAKind,
         };
     } else {
-        for card in hand.chars() {
+        for card in cards.chars() {
             if card != 'J' {
                 *counts.entry(card).or_insert(0) += 1;
             }
@@ -74,26 +76,35 @@ fn classify_hand_joker(hand: &str) -> Hand {
 
     let (most_common_card, _) = counts.iter().max_by_key(|(_, count)| *count).unwrap();
 
-    let jokers_replaced = hand.replace('J', &most_common_card.to_string());
+    let jokers_replaced = cards.replace('J', &most_common_card.to_string());
 
-    Hand {
-        hand_str: hand.into(),
-        hand_type: classify_hand_normal(&jokers_replaced).hand_type,
+    HandPlay {
+        string: cards.into(),
+        play: classify_hand_normal(&jokers_replaced).play,
     }
 }
 
-fn sort_hand(hands: &mut [(Hand, u32)], joker: bool) {
+fn sort_hand(hands: &mut [HandBid], joker: bool) {
     hands.sort_by(|a, b| {
-        let hand_type = a.0.hand_type.cmp(&b.0.hand_type);
+        let hand_type = a.hand.play.cmp(&b.hand.play);
         if hand_type != std::cmp::Ordering::Equal {
             return hand_type;
         }
 
-        a.0.hand_str
+        a.hand
+            .string
             .chars()
-            .map(|c| card_rank_lut(c, joker))
-            .cmp(b.0.hand_str.chars().map(|c| card_rank_lut(c, joker)))
+            .map(|card| card_rank_lut(card, joker))
+            .cmp(b.hand.string.chars().map(|c| card_rank_lut(c, joker)))
     });
+}
+
+fn calculate_winnings(hands: &[HandBid]) -> u32 {
+    hands
+        .iter()
+        .enumerate()
+        .map(|(rank, hand_bid)| hand_bid.bid * (rank as u32 + 1))
+        .sum()
 }
 
 fn card_rank_lut(card: char, joker: bool) -> u32 {
@@ -113,16 +124,8 @@ fn card_rank_lut(card: char, joker: bool) -> u32 {
     }
 }
 
-fn calculate_winnings(hands: &[(Hand, u32)]) -> u32 {
-    hands
-        .iter()
-        .enumerate()
-        .map(|(rank, (_, bid))| bid * (rank as u32 + 1))
-        .sum()
-}
-
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
-enum HandType {
+enum Play {
     HighCard,
     OnePair,
     TwoPair,
@@ -132,7 +135,12 @@ enum HandType {
     FiveOfAKind,
 }
 
-struct Hand {
-    hand_str: Box<str>,
-    hand_type: HandType,
+struct HandPlay {
+    string: Box<str>,
+    play: Play,
+}
+
+struct HandBid {
+    hand: HandPlay,
+    bid: u32,
 }
