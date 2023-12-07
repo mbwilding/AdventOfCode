@@ -121,7 +121,7 @@ fn calculate_winnings(hands: &[(Hand, u32)]) -> u32 {
         .sum()
 }
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
 enum HandType {
     HighCard,
     OnePair,
@@ -132,7 +132,6 @@ enum HandType {
     FiveOfAKind,
 }
 
-#[derive(Debug)]
 struct Hand {
     hand_str: Box<str>,
     hand_type: HandType,
