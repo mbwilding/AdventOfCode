@@ -11,26 +11,12 @@ pub fn part_2(lines: &[String]) -> u32 {
 fn execute(lines: &[String], joker: bool) -> u32 {
     let mut hands = lines
         .iter()
-        .map(|line| {
-            let (cards, bid) = parse_line(line);
-            let hand = if joker {
-                classify_hand_joker(cards)
-            } else {
-                classify_hand_normal(cards)
-            };
-            HandBid { hand, bid }
-        })
+        .map(|line| HandBid::from_line(line, joker))
         .collect::<Vec<_>>();
 
     sort_hand(&mut hands, joker);
 
     calculate_winnings(&hands)
-}
-
-fn parse_line(line: &str) -> (&str, u32) {
-    let parts: Vec<&str> = line.split_whitespace().collect();
-
-    (parts[0], parts[1].parse().unwrap())
 }
 
 fn classify_hand_normal(hand: &str) -> HandPlay {
@@ -143,4 +129,18 @@ struct HandPlay {
 struct HandBid {
     hand: HandPlay,
     bid: u32,
+}
+
+impl HandBid {
+    fn from_line(line: &str, joker: bool) -> Self {
+        let parts: Vec<&str> = line.split_whitespace().collect();
+        let (cards, bid) = (parts[0], parts[1].parse().unwrap());
+        let hand = if joker {
+            classify_hand_joker(cards)
+        } else {
+            classify_hand_normal(cards)
+        };
+
+        HandBid { hand, bid }
+    }
 }
