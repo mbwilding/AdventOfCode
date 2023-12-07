@@ -14,7 +14,7 @@ fn execute(lines: &[String], joker: bool) -> u32 {
         .map(|line| HandBid::from_line(line, joker))
         .collect::<Vec<_>>();
 
-    sort_hand(&mut hands, joker);
+    sort_hands(&mut hands, joker);
 
     calculate_winnings(&hands)
 }
@@ -70,7 +70,7 @@ fn classify_hand_joker(cards: &str) -> HandPlay {
     }
 }
 
-fn sort_hand(hands: &mut [HandBid], joker: bool) {
+fn sort_hands(hands: &mut [HandBid], joker: bool) {
     hands.sort_by(|a, b| {
         let hand_type = a.hand.play.cmp(&b.hand.play);
         if hand_type != std::cmp::Ordering::Equal {
