@@ -4,7 +4,7 @@ use common_2023::*;
 mod logic;
 mod tests;
 
-pub const DAY: i32 = 6;
+pub const DAY: u8 = 6;
 
 fn main() {
     run(DAY, "real", part_1, part_2);

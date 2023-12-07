@@ -13,6 +13,7 @@ members = [
     "2023/rust/day4",
     "2023/rust/day5",
     "2023/rust/day6",
+    "2023/rust/day7",
 ]
 
 [profile.dev]
