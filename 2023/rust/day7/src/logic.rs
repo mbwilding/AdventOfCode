@@ -117,7 +117,7 @@ fn calculate_winnings(hands: &[(Hand, u32)]) -> u32 {
     hands
         .iter()
         .enumerate()
-        .map(|(rank, &(_, bid))| bid * (rank as u32 + 1))
+        .map(|(rank, (_, bid))| bid * (rank as u32 + 1))
         .sum()
 }
 
