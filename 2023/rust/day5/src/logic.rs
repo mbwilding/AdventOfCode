@@ -4,16 +4,16 @@ use std::str::SplitWhitespace;
 pub fn part_1(lines: &[String]) -> usize {
     let seeds = extract_seeds(lines);
 
-    execute(&lines, &seeds)
+    execute(lines, &seeds)
 }
 
 pub fn part_2(lines: &[String]) -> usize {
     let seeds = generate_seeds(lines);
 
-    execute(&lines, &seeds)
+    execute(lines, &seeds)
 }
 
-fn execute(lines: &&[String], seeds: &[usize]) -> usize {
+fn execute(lines: &[String], seeds: &[usize]) -> usize {
     let sections = split_at_blank_lines(&lines[2..]);
     let maps = sections_to_maps(&sections);
 
